@@ -1,0 +1,100 @@
+Display_Refresh:  
+    gosub Lcd_Init  
+    gosub Lcd_Clear
+
+Display_Draw:                                          
+@  if (Nokia3310_7110 == 0)                         'Pystyviiva
+    for TEMP=0 to 6                                 
+        PosX=42:PosY=TEMP:Gosub Lcd_GotoXY
+        Lcd_Data=$FF:Gosub Write_Lcd_Single
+    next TEMP                                 
+@  endif
+@  if (Nokia3310_7110 == 1)
+    for TEMP=0 to 7
+        PosX=42:PosY=TEMP:Gosub Lcd_GotoXY
+        Lcd_Data=$FF:Gosub Write_Lcd_Single
+    next TEMP                                 
+@  endif
+
+    
+@  if (Nokia3310_7110 == 0)                         'Vaakaviiva
+    for k = 2 to 4 step 2
+        PosX=43:PosY=k:Gosub Lcd_GotoXY             
+        for TEMP=0 to 7
+            Lcd_Data=$01:Gosub Write_Lcd_Single
+            Lcd_Data=$01:Gosub Write_Lcd_Single
+            Lcd_Data=$01:Gosub Write_Lcd_Single
+            Lcd_Data=$01:Gosub Write_Lcd_Single
+            Lcd_Data=$01:Gosub Write_Lcd_Single
+        next TEMP
+    next k
+@  endif
+@  if (Nokia3310_7110 == 1)
+    for k = 2 to 6 step 2
+        PosX=43:PosY=k:Gosub Lcd_GotoXY             
+        for TEMP=0 to 7
+            Lcd_Data=$01:Gosub Write_Lcd_Single
+            Lcd_Data=$01:Gosub Write_Lcd_Single
+            Lcd_Data=$01:Gosub Write_Lcd_Single
+            Lcd_Data=$01:Gosub Write_Lcd_Single
+            Lcd_Data=$01:Gosub Write_Lcd_Single
+        next TEMP
+    next k
+@  endif
+
+    PosX=48:PosY=0:Gosub Lcd_GotoXY                 'Motor Logo
+    I2CAddressEEprom =  3788:gosub Lue_I2C
+    I2CAddressEEprom =  3794:gosub Lue_I2C
+    I2CAddressEEprom =  3800:gosub Lue_I2C
+    I2CAddressEEprom =  3806:gosub Lue_I2C
+    I2CAddressEEprom =  3812:gosub Lue_I2C
+    
+    PosX=48:PosY=2:Gosub Lcd_GotoXY                 'Air Logo
+    I2CAddressEEprom =  3818:gosub Lue_I2C
+    I2CAddressEEprom =  3824:gosub Lue_I2C
+    I2CAddressEEprom =  3830:gosub Lue_I2C
+    I2CAddressEEprom =  3836:gosub Lue_I2C
+    I2CAddressEEprom =  3842:gosub Lue_I2C
+
+@  if (Nokia3310_7110 == 1)
+    PosX=48:PosY=4:Gosub Lcd_GotoXY                 'Time Logo
+    I2CAddressEEprom =  4448:gosub Lue_I2C
+    I2CAddressEEprom =  4454:gosub Lue_I2C
+    I2CAddressEEprom =  4460:gosub Lue_I2C
+    I2CAddressEEprom =  4466:gosub Lue_I2C
+    I2CAddressEEprom =  4472:gosub Lue_I2C
+@  endif
+
+@  if (Nokia3310_7110 == 0)
+    PosX=48:PosY=4:Gosub Lcd_GotoXY                 'Batt Logo
+@  endif
+@  if (Nokia3310_7110 == 1)
+    PosX=48:PosY=6:Gosub Lcd_GotoXY                 'Batt Logo
+@  endif
+    I2CAddressEEprom =  3848:gosub Lue_I2C
+    I2CAddressEEprom =  3854:gosub Lue_I2C
+    I2CAddressEEprom =  3860:gosub Lue_I2C
+    I2CAddressEEprom =  3866:gosub Lue_I2C
+    I2CAddressEEprom =  3872:gosub Lue_I2C
+
+    for TEMP = 1 to 3 step 2
+        PosX=73:PosY=TEMP:Gosub Lcd_GotoXY          'Celsius 1 & 2)
+        Lcd_Data=$02:Gosub Write_Lcd_Single
+        Lcd_Data=$05:Gosub Write_Lcd_Single
+        Lcd_Data=$02:Gosub Write_Lcd_Single
+        Lcd_Data=$00:Gosub Write_Lcd_Single
+        I2CAddressEEprom =  938:gosub Lue_I2C
+    next TEMP
+        
+@  if (Nokia3310_7110 == 0)
+    PosX=73:PosY=5:Gosub Lcd_GotoXY                 'V for voltage
+@  endif
+@  if (Nokia3310_7110 == 1)
+    PosX=73:PosY=7:Gosub Lcd_GotoXY               
+@  endif
+    for TEMP = 0 to 3
+        Lcd_Data=$00:Gosub Write_Lcd_Single
+    next TEMP
+    I2CAddressEEprom =  1052:gosub Lue_I2C
+    
+    return

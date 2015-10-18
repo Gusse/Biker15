@@ -1,0 +1,203 @@
+'-------------------------------------------------------------------------------
+Wheel:
+    PosX=0:PosY=0:Gosub Lcd_GotoXY
+    TEMP = 0
+    gosub Lcd_Clear
+    for temp2 = 0 to 5
+        for temp1 = 0 to 2
+            FOR k = 0 to 5
+                PosX=TEMP:PosY=(k+A):Gosub Lcd_GotoXY    'Wheel Logos
+                for i = 0 to 7
+                    I2CAddressEEprom = (2924+(i*6)+(k*48)+(temp1*288)):gosub Lue_I2C
+                next i
+            next k
+            temp = temp + 2
+        next temp1
+    next temp2
+    temp1 = 0
+    temp2 = 0
+    temp = 0
+    return
+'-------------------------------------------------------------------------------
+Stop_Logo:
+    FOR k = 0 to 5
+        PosX=18:PosY=(k+A):Gosub Lcd_GotoXY     'Stop Logo
+        for i = 0 to 7
+            I2CAddressEEprom = (1304 + (i*6) + (k*48)):gosub Lue_I2C
+        next i
+    next k
+    return
+'-------------------------------------------------------------------------------
+Kawa_Logo:
+    FOR k = 0 to 5
+        PosX=0:PosY=(k+A):Gosub Lcd_GotoXY     'Kawa Logo
+        for i = 0 to 13
+            I2CAddressEEprom = ((i*6) + (k*84)):gosub Lue_I2C
+        next i
+    next k
+    return
+'------------------------------------------------------------------------------- 
+Sleep_Logo:
+    FOR k = 0 to 5
+        PosX=0:PosY=(k+A):Gosub Lcd_GotoXY     'Sleep Logo
+        for i = 0 to 13
+            I2CAddressEEprom = (2420 + (i*6) + (k*84)):gosub Lue_I2C
+        next i
+    next k
+    return
+'-------------------------------------------------------------------------------
+Emergency_Logo:
+    FOR i = 0 to 53
+        for k = 0 to 5
+            PosX=(i+15):PosY=(k+A):Gosub Lcd_GotoXY    'Muu Vaara Logo
+            j = k * 54
+            I2CAddressEEprom = (1592 +(i+j)):gosub Lue_I2C_single
+        next k    
+    next i
+    return
+'-------------------------------------------------------------------------------
+Alarm_show:
+    gosub Lcd_Clear
+    FOR i = 0 to 53
+        for k = 0 to 5
+            PosX=(i+15):PosY=(k+A):Gosub Lcd_GotoXY    'Muu Vaara Logo
+            j = k * 54
+            I2CAddressEEprom = (1592 +(i+j)):gosub Lue_I2C_single
+        next k    
+    next i
+    pause 500
+    For TEMP = 0 to 3 step 1
+        gosub Scr_Invert  
+        pause 500
+        Gosub Scr_Normal
+        pause 500
+    next TEMP
+    Gosub Lcd_Clear        
+
+    PosX=18:PosY=1:Gosub Lcd_GotoXY    
+    for temp1 = 2 to 0 step -1
+        read (40+temp1), RTC_Clock   
+        gosub Show_RTC_Clock
+        if temp1 > 0 then
+            I2CAddressEEprom = 884:gosub Lue_I2C
+        endif
+    next temp1
+
+    PosX=18:PosY=2:Gosub Lcd_GotoXY
+    for temp1 = 4 to 6 step 1
+        read (40+temp1), RTC_Clock
+        gosub Show_RTC_Clock
+        if temp1 < 6 then
+            I2CAddressEEprom = 812:gosub Lue_I2C
+        endif
+    next temp1
+    
+    
+    if Alarm_2nd = 1 then
+        PosX=18:PosY=4:Gosub Lcd_GotoXY        
+        for temp1 = 2 to 0 step -1
+            read (48+temp1), RTC_Clock        
+            gosub Show_RTC_Clock
+            if temp1 > 0 then
+                I2CAddressEEprom = 884:gosub Lue_I2C
+            endif
+        next temp1
+    
+        PosX=18:PosY=5:Gosub Lcd_GotoXY
+        for temp1 = 4 to 6 step 1
+            read (48+temp1), RTC_Clock
+            gosub Show_RTC_Clock
+            if temp1 < 6 then
+                I2CAddressEEprom = 812:gosub Lue_I2C
+            endif
+        next temp1
+    endif
+
+    pause 15000
+    Gosub Lcd_Clear
+    return    
+'-------------------------------------------------------------------------------
+Alarm_Selection:
+    FOR k = 0 to 5
+        PosX=0:PosY=(k+A):Gosub Lcd_GotoXY     'Alarm Selection Logo
+        for i = 0 to 13
+            I2CAddressEEprom = (1916 + (i*6) + (k*84)):gosub Lue_I2C
+        next i
+    next k
+    return
+'-------------------------------------------------------------------------------
+Countdown:
+    i = 0
+    for TEMP = 0 to 24
+        If key = 1 then goto Mainloop
+        PosX=5+i:PosY=(3+A):Gosub Lcd_GotoXY         'Upper bar
+        high Lcd_DC
+        Lcd_Data=$FF:Gosub Write_Lcd_Single:Gosub Write_Lcd_Single:Gosub Write_Lcd_Single   
+        PosX=5+i:PosY=(4+A):Gosub Lcd_GotoXY         'Lower bar
+        high Lcd_DC
+        Lcd_Data=$FF:Gosub Write_Lcd_Single:Gosub Write_Lcd_Single:Gosub Write_Lcd_Single
+        gosub Lcd_Home
+        i = i + 3
+    next temp
+    temp1 = 25
+                '------------------------------------------     
+                    PosX=42:PosY=(1+A):Gosub Lcd_GotoXY      
+                    I2CAddressEEprom =  728:gosub Lue_I2C
+                    I2CAddressEEprom =  728:gosub Lue_I2C
+                    PosX=42:PosY=(1+A):Gosub Lcd_GotoXY
+                    I2CAddressEEprom =  836:gosub Lue_I2C
+                    I2CAddressEEprom =  854:gosub Lue_I2C               
+                '------------------------------------------    
+    pause 1000
+                '------------------------------------------    
+                    temp1 = temp1 - 1                    
+                    LcdStr(2) = 32
+                    LcdStr(1) = temp1 dig 0  
+                    LcdStr(0) = temp1 dig 1    
+                    if LcdStr(0) = 0 then LcdStr(0) = 32 
+                    PosX=42:PosY=(1+A):Gosub Lcd_GotoXY      
+                    Gosub Lcd_SentString3                
+                '------------------------------------------ 
+        PosX=77:PosY=(3+A):Gosub Lcd_GotoXY         'Upper bar
+        high Lcd_DC
+        Lcd_Data=$01:Gosub Write_Lcd_Single:Gosub Write_Lcd_Single
+        Lcd_Data=$FF:Gosub Write_Lcd_Single            
+        PosX=77:PosY=(4+A):Gosub Lcd_GotoXY         'Lower bar
+        high Lcd_DC
+        Lcd_Data=$80:Gosub Write_Lcd_Single:Gosub Write_Lcd_Single
+        Lcd_Data=$FF:Gosub Write_Lcd_Single        
+        gosub Lcd_Home
+    i = 73
+    for TEMP = 0 to 23
+        If key = 1 then goto Mainloop
+        pause 1000
+                '------------------------------------------    
+                    temp1 = temp1 - 1                    
+                    LcdStr(2) = 32
+                    LcdStr(1) = temp1 dig 0  
+                    LcdStr(0) = temp1 dig 1
+                    if LcdStr(0) = 0 then LcdStr(0) = 32 
+                    PosX=42:PosY=(1+A):Gosub Lcd_GotoXY      
+                    Gosub Lcd_SentString3                
+                '------------------------------------------ 
+        PosX=1+i:PosY=(3+A):Gosub Lcd_GotoXY         'Upper bar
+        high Lcd_DC
+        Lcd_Data=$01:Gosub Write_Lcd_Single:Gosub Write_Lcd_Single:Gosub Write_Lcd_Single    
+        PosX=1+i:PosY=(4+A):Gosub Lcd_GotoXY         'Lower bar
+        high Lcd_DC
+        Lcd_Data=$80:Gosub Write_Lcd_Single:Gosub Write_Lcd_Single:Gosub Write_Lcd_Single
+        gosub Lcd_Home
+        i = i - 3
+    next TEMP
+    pause 1000
+    return
+'-------------------------------------------------------------------------------
+Oil_Logo:
+    FOR k = 0 to 5
+        PosX=0:PosY=(k+A):Gosub Lcd_GotoXY     'Oil Logo
+        for i = 0 to 13
+            I2CAddressEEprom = (3944 + (i*6) + (k*84)):gosub Lue_I2C
+        next i
+    next k
+    return
+'-------------------------------------------------------------------------------

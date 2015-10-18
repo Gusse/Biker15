@@ -1,0 +1,97 @@
+'-------------------------------------------------------------------------------
+' 3D Accelerometer
+'-------------------------------------------------------------------------------
+Accelerometer_Init:
+
+    'Axes
+    I2CAddress_3D = $20     'CTRL_REG1
+    TEMP = %01000111        'DR=0, PD=1, FS=0, STP=00, Zen=1, Yen=1, Xen=1 (X,Y,Z enable, Output 100Hz)
+    gosub I2C_Write_3D      
+    '---------------------
+    
+    'Filters
+    I2CAddress_3D = $21     'CTRL_REG2
+    TEMP = %00000111        'SIM = 0, BOOT = 0, --,  FDS = 0, HP FF_WU2 = 0, HP FF_WU1 = 1, HP coeff2 = 1, HP coeff1 = 1 (HP 0.25Hz for FF_WU1)
+    gosub I2C_Write_3D
+    
+    '---------------------
+    
+    'Interrupts
+    I2CAddress_3D = $22     'CTRL_REG3
+    TEMP = %00000001        'IHL = 0, PP_OD = 0, I2CFG2-0 = 000, I1CFG2-0 = 001 (FF_WU 1 = INT1)
+    gosub I2C_Write_3D
+    
+    '---------------------
+    
+    'Sensitivity
+    I2CAddress_3D = $32     'FF_WU_THS_1
+    TEMP = $02              'DCRM = 0, THS6 = 0, THS5 = 0, THS4 = 0, THS3 = 0, THS2 = 0, THS1 = 1, THS0 = 0 (~36mg wake-up threshold, ~18mg step)
+    gosub I2C_Write_3D      
+    
+    '---------------------
+    
+    'Duration
+    I2CAddress_3D = $33     'FF_DURATION_1
+    TEMP = $0D              'D7 = 0, D6 = 0, D5 = 0, D4 = 0, D3 = 1, D2 = 1, D1 = 0, D0 = 1 (130ms, 0 - 2.55s, 10ms step)
+    gosub I2C_Write_3D      '0Ah = 100ms, 0Fh = 150ms, 14h = 200ms, 28h = 400ms, 32h = 500ms,
+    
+    '---------------------
+    
+    'Wake-Up Thresholds
+    I2CAddress_3D = $30     'FF_WU_GFG_1
+    TEMP = %01101010        'AOI = 0, LIR = 1, ZHIE = 1, ZLIE = 0, YHIE = 1, YLIE = 0, XHIE = 1, XLIE = 0 (wake-up above thresholde on x,y,z)
+    gosub I2C_Write_3D
+    
+    '---------------------
+    
+    gosub Accelerometer_Clear 
+Return
+
+'-------------------------------------------------------------------------------
+I2C_Write_3D:
+    I2CWRITE SDA_3D, SCL_3D, I2CDevice_3D_write, I2CAddress_3D,[ TEMP ]
+    Return
+
+I2C_Read_3D:
+    I2cread SDA_3D, SCL_3D, I2CDevice_3D_read, I2CAddress_3D,[ TEMP ]
+    Return
+
+'-------------------------------------------------------------------------------
+Accelerometer:
+    IF Int1_3D = 1 THEN         ' Int1_3D is IO pin for Interrup coming from 3D sensor
+        gosub Accelerometer_Clear
+        Accel_Alarm = 1         ' This is indecator that something must be done in main program        
+    endif
+    return
+
+Accelerometer_Clear:            ' If sensor has moved during event hadling, then interrupt must be cleared once before new sequence
+    I2CAddress_3D = $31         ' Clear interrupt request
+    gosub I2C_Read_3D
+    I2CAddress_3D = $23         ' Reset acceration/tilt value after interrupt 
+    gosub I2C_Read_3D
+    Return
+'-------------------------------------------------------------------------------
+RTC_TO_EEPROM:
+    for temp1 = 0 to 6
+        I2CAddress_RTC = temp1        
+        gosub I2C_Read_RTC
+        RTC_Clock = (Temp & %00001111) + ((Temp & %01110000) >> 4)*10
+        if Show_alarm = 0 then
+                write (40+temp1),RTC_Clock
+            else
+                write (48+temp1),RTC_Clock
+        endif
+    next temp1
+    return
+    
+'-------------------------------------------------------------------------------
+Zero_EEPROM:
+    for temp1 = 10 to 54
+        write temp1, 0
+    next temp1
+    return
+'-------------------------------------------------------------------------------            
+Hold_Moment2:
+    LOW Power_I2C
+    pauseus 100
+    goto Hold_Moment

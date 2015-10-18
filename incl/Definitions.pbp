@@ -1,0 +1,82 @@
+' PIC18F4520               _________
+'      			 [MCLR] ->| MCLR B7 |<- - / [PGD = Data]
+'          Batt A/D IN  ->| A0   B6 |-> LCD SDA  / [PGC = Clock]
+'                  alas ->| A1   B5 |-> LCD VCC
+'  (alarm on-off)/vapaa ->| A2   B4 |-> LCD !RST
+'		          ylös  ->| A3   B3 |-> LCD !CS / [PGM, not in use]
+'                  valo ->| A4   B2 |-> LCD D/!C 
+' Key,alarm mode on/off ->| A5   B1 |-> LCD CLK 
+'		  Lights ON/OFF ->| E0   B0 |<- INTERRUPT  
+'			       Menu ->| E1      |-- VDD
+'			            <>| E2      |-- GND
+'			        VDD --|      D7 |<> 
+'			        GND --|      D6 |<- Int1_3D              
+'			            <>| A6   D5 |-> Power_I2C             
+'			            <>| A7   D4 |-> I2C SCL_3D          
+'		 Light_R [rele] <-| C0   C7 |<> I2C SDA_3D     
+'		 Light_L [rele] <-| C1   C6 |-> Oiler [rele]         
+'	     LCD LED (HPWM) <-| C2   C5 |-> Horn [rele]
+'	    Power_I2C_1Wire <-| C3   C4 |<> 
+'			    I2C SCL <-| D0   D3 |-> LED alarm
+'               I2C SDA <>| D1   D2 |<> 1Wire
+'                         |_________|
+'
+'                       pin nr  Name	
+'                       1	    RB0	  (INT, not routed to connector)
+'                       2	    RB1	  (LCD CLK)
+'                       3	    GND	   Ground
+'                       4	    RB2	  (LCD D/!C)
+'                       5	    GND	   Ground
+'                       6	    RB3	  (LCD !CS
+'                       7	    RC2   (LCD LED) (HPWM)
+'                       8	    RB4	  (LCD !RST)
+'                       9	    RB6	  (LCD SDA)
+'                       10	    RB5	  (LCD VCC)
+'-------------------------------------------------------------------------------
+'   Port Mapping:
+'
+'   A0 = input, ANA
+'   A1 = input, DIG
+'   A2 = input, DIG
+'   A3 = input, DIG
+'   A4 = input, DIG
+'   A5 = input, DIG
+'   A6 = input, DIG
+'   A7 = input, DIG
+'   TRISA = %11111111
+'   -----------------
+'   B0 = input, DIG (sleep)
+'   B1 = output, DIG
+'   B2 = output, DIG
+'   B3 = output, DIG
+'   B4 = output, DIG
+'   B5 = output, DIG
+'   B6 = output, DIG
+'   B7 = output, DIG
+'   TRISB = %00000001
+'   -----------------
+'   C0 = output, DIG
+'   C1 = output, DIG
+'   C2 = configured by HPWM
+'   C3 = output, DIG
+'   C4 = output, DIG
+'   C5 = output, DIG
+'   C6 = output, DIG
+'   C7 = configured by I2C
+'   TRISC = %00000000
+'   -----------------
+'   D0 = configured by I2C
+'   D1 = configured by I2C
+'   D2 = configured by 1Wire
+'   D3 = output, DIG
+'   D4 = configured by I2C
+'   D5 = output, DIG
+'   D6 = input, DIG
+'   D7 = output, DIG
+'   TRISD = %00000000
+'   -----------------
+'   E0 = input, DIG
+'   E1 = input, DIG
+'   E2 = output, DIG
+'   TRISE = %00000011
+'-------------------------------------------------------------------------------

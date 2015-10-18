@@ -1,0 +1,251 @@
+'-------------------------------------------------------------------------------
+' Valikko-osuus
+'-------------------------------------------------------------------------------
+Valikko:
+    Gosub Lights_Ctrl_Det  
+    Gosub Lcd_Clear
+    high LED
+    pause 100
+    low LED
+    gosub Lights_Forced_ON
+    gosub Detection
+
+Valikko_loop:
+    pause 10
+    if Menu = 0 AND key = 1 then goto Valikko_loop
+    pause 100
+    goto Valikko_sub_sub
+
+'-------------------------------------------------------------------------------    
+Detection:
+    gosub Lcd_Clear
+    PosX=21:PosY=0:Gosub Lcd_GotoXY
+    I2CAddressEEprom =  1010:gosub Lue_I2C  'O
+    I2CAddressEEprom =  1016:gosub Lue_I2C  'P
+    I2CAddressEEprom =  1040:gosub Lue_I2C  'T
+    I2CAddressEEprom =  974:gosub Lue_I2C   'I
+    I2CAddressEEprom =  1010:gosub Lue_I2C  'O
+    I2CAddressEEprom =  1004:gosub Lue_I2C  'N
+    I2CAddressEEprom =  1034:gosub Lue_I2C  'S   
+
+    PosX=11:PosY=1:Gosub Lcd_GotoXY                                             
+    I2CAddressEEprom =  776:gosub Lue_I2C   '(
+    I2CAddressEEprom =  932:gosub Lue_I2C   'B                                  
+    I2CAddressEEprom =  806:gosub Lue_I2C   '-                                  
+    I2CAddressEEprom =  830:gosub Lue_I2C   '1                                  
+    I2CAddressEEprom =  854:gosub Lue_I2C   '5                                  
+    I2CAddressEEprom =   728:gosub Lue_I2C  'Space                              
+    gosub Version_Info_sub
+    I2CAddressEEprom =  782:gosub Lue_I2C   ')
+
+
+    PosX=12:PosY=2:Gosub Lcd_GotoXY
+    I2CAddressEEprom =  992:gosub Lue_I2C   'L
+    I2CAddressEEprom =  1166:gosub Lue_I2C  'i
+    I2CAddressEEprom =  1154:gosub Lue_I2C  'g
+    I2CAddressEEprom =  1160:gosub Lue_I2C  'h
+    I2CAddressEEprom =  1232:gosub Lue_I2C  't
+    I2CAddressEEprom =  1226:gosub Lue_I2C  's
+    I2CAddressEEprom =   728:gosub Lue_I2C  'Space
+
+    PosX=12:PosY=3:Gosub Lcd_GotoXY
+    I2CAddressEEprom =  938:gosub Lue_I2C   'C
+    I2CAddressEEprom = 1184:gosub Lue_I2C   'l
+    I2CAddressEEprom = 1202:gosub Lue_I2C   'o
+    I2CAddressEEprom = 1130:gosub Lue_I2C   'c
+    I2CAddressEEprom = 1178:gosub Lue_I2C   'k
+    
+    PosX=12:PosY=4:Gosub Lcd_GotoXY
+    I2CAddressEEprom =   938:gosub Lue_I2C  'C
+    I2CAddressEEprom =  1202:gosub Lue_I2C  'o
+    I2CAddressEEprom =  1196:gosub Lue_I2C  'n
+    I2CAddressEEprom =  1148:gosub Lue_I2C  'f
+    I2CAddressEEprom =  1166:gosub Lue_I2C  'i
+    I2CAddressEEprom =  1154:gosub Lue_I2C  'g
+
+    PosX=12:PosY=5:Gosub Lcd_GotoXY
+    I2CAddressEEprom =  950:gosub Lue_I2C   'E
+    I2CAddressEEprom =  1064:gosub Lue_I2C  'X
+    I2CAddressEEprom =  974:gosub Lue_I2C   'I
+    I2CAddressEEprom =  1040:gosub Lue_I2C  'T    
+
+Detection_sub:
+    PosX=61:PosY=2:Gosub Lcd_GotoXY
+    if Light_ctrl = 1 then
+            gosub On_Display
+        else
+            gosub Off_Display
+    endif
+    
+    if Marker = 0 then
+            PosX=3:PosY=5:Gosub Lcd_GotoXY
+            I2CAddressEEprom =  728:gosub Lue_I2C   'Space
+            PosX=3:PosY=2:Gosub Lcd_GotoXY
+            I2CAddressEEprom =  908:gosub Lue_I2C   '>
+            PosX=3:PosY=3:Gosub Lcd_GotoXY
+            I2CAddressEEprom =  728:gosub Lue_I2C   'Space        
+            PosX=3:PosY=4:Gosub Lcd_GotoXY
+            I2CAddressEEprom =  728:gosub Lue_I2C   'Space
+    endif                  
+
+    if Marker = 1 then
+            PosX=3:PosY=2:Gosub Lcd_GotoXY
+            I2CAddressEEprom =  728:gosub Lue_I2C   'Space
+            PosX=3:PosY=3:Gosub Lcd_GotoXY
+            I2CAddressEEprom =  908:gosub Lue_I2C   '>        
+            PosX=3:PosY=4:Gosub Lcd_GotoXY
+            I2CAddressEEprom =  728:gosub Lue_I2C   'Space
+            PosX=3:PosY=5:Gosub Lcd_GotoXY
+            I2CAddressEEprom =  728:gosub Lue_I2C   'Space
+    endif                   
+
+    if Marker = 2 then
+            PosX=3:PosY=2:Gosub Lcd_GotoXY
+            I2CAddressEEprom =  728:gosub Lue_I2C   'Space
+            PosX=3:PosY=3:Gosub Lcd_GotoXY
+            I2CAddressEEprom =  728:gosub Lue_I2C   'Space        
+            PosX=3:PosY=4:Gosub Lcd_GotoXY
+            I2CAddressEEprom =  908:gosub Lue_I2C   '>
+            PosX=3:PosY=5:Gosub Lcd_GotoXY
+            I2CAddressEEprom =  728:gosub Lue_I2C   'Space
+    endif
+    
+    if Marker = 3 then
+            PosX=3:PosY=2:Gosub Lcd_GotoXY
+            I2CAddressEEprom =  728:gosub Lue_I2C   'Space
+            PosX=3:PosY=3:Gosub Lcd_GotoXY
+            I2CAddressEEprom =  728:gosub Lue_I2C   'Space
+            PosX=3:PosY=4:Gosub Lcd_GotoXY
+            I2CAddressEEprom =  728:gosub Lue_I2C   'Space        
+            PosX=3:PosY=5:Gosub Lcd_GotoXY
+            I2CAddressEEprom =  908:gosub Lue_I2C   '>
+    endif
+                      
+    return
+      
+'-------------------------------------------------------------------------------    
+Valikko_sub:
+    pause 100
+    if Menu = 0 AND key = 1 then goto Valikko_sub
+    Marker = 0
+    gosub Detection_sub
+Valikko_sub_sub:
+    If key = 0 or Mid = 1 then goto Hold_Moment    
+    if Lights_ON_OFF = 0 then
+        pause 100
+        if Lights_ON_OFF = 0 then goto LED_Valikko
+    endif          
+    if Menu = 0 then
+        pause 100
+        if Menu = 0 then goto Valikko_sub2
+    endif          
+    goto Valikko_sub_sub
+
+Valikko_sub2:
+    pause 100
+    if Menu = 0 AND key = 1 then goto Valikko_sub2
+    Marker = 1
+    gosub Detection_sub  
+Valikko_sub2_sub:    
+    If key = 0 or Mid = 1 then goto Hold_Moment
+    if Lights_ON_OFF = 0 then
+        pause 100
+        if Lights_ON_OFF = 0 then goto Clk_Valikko
+    endif          
+    if Menu = 0 then
+        pause 100
+        if Menu = 0 then goto Valikko_sub3
+    endif          
+    goto Valikko_sub2_sub
+
+Valikko_sub3:
+    pause 100
+    if Menu = 0 AND key = 1 then goto Valikko_sub3
+    Marker = 2
+    gosub Detection_sub  
+Valikko_sub3_sub:    
+    If key = 0 or Mid = 1 then goto Hold_Moment
+    if Lights_ON_OFF = 0 then
+        pause 100
+        if Lights_ON_OFF = 0 then goto Config_Valikko
+    endif          
+    if Menu = 0 then
+        pause 100
+        if Menu = 0 then goto Valikko_sub4
+    endif          
+    goto Valikko_sub3_sub
+
+Valikko_sub4:
+    pause 100
+    if Menu = 0 AND key = 1 then goto Valikko_sub4
+    Marker = 3
+    gosub Detection_sub  
+Valikko_sub4_sub:
+    If key = 0 or Mid = 1 then goto Hold_Moment    
+    if Lights_ON_OFF = 0 then
+        pause 100
+        if Lights_ON_OFF = 0 then goto Hold_Moment
+    endif          
+    if Menu = 0 then
+        pause 100
+        if Menu = 0 then goto Valikko_sub
+    endif          
+    goto Valikko_sub4_sub    
+'-------------------------------------------------------------------------------
+LED_Valikko:
+    If Light_ctrl = 0 then
+            Light_ctrl = 1
+        else
+            Light_ctrl = 0
+    endif
+    gosub Detection_sub
+LED_Valikko_sub:
+    pause 100
+    if Lights_ON_OFF = 0 AND key = 1 then goto LED_Valikko_sub
+    goto Valikko_sub_sub  
+
+Config_Valikko:
+    goto Valikko2
+        
+Clk_Valikko:
+    goto RTC_Clock_Menu
+
+'-------------------------------------------------------------------------------
+On_Display:
+    I2CAddressEEprom =  1010:gosub Lue_I2C   'O
+    I2CAddressEEprom =  1004:gosub Lue_I2C   'N
+    I2CAddressEEprom =   728:gosub Lue_I2C   'Space
+    return
+    
+Off_Display:
+    I2CAddressEEprom =  1010:gosub Lue_I2C   'O
+    I2CAddressEEprom =  956:gosub Lue_I2C    'F
+    I2CAddressEEprom =  956:gosub Lue_I2C    'F
+    return
+
+
+Hold_Moment:
+    High Power_I2C
+    pause 100
+    If key = 1 AND Menu = 0 then goto Hold_Moment
+    High LED
+    Pause 100
+    LOW LED
+    Gosub Lcd_Clear 
+    If Light_ctrl = 0 then
+            gosub Light_off
+            T2CON.2 = 0
+    endif
+    Naytto = 1
+    Counter = 20
+    Counter2 = 0
+    Marker = 0
+    gosub Temp_start
+    gosub Temp_meas
+    gosub Temp_init
+    gosub Meas_ADC
+    gosub Display_Refresh
+    gosub Display_Gear
+    @ INT_ENABLE  TMR1_INT
+    GOSUB StartTimer
+    GOTO Mainloop2

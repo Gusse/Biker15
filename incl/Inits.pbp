@@ -1,0 +1,134 @@
+'###############################################################################
+'------------------------------------------------------------------------------- 
+' 1st init and mode change inits
+'-------------------------------------------------------------------------------    
+init:
+    OSCCON = $70                'Int CLK 8MHz
+    OSCTUNE.6 = 1               'PLL 4x
+    TRISA = %11111111
+    ADCON1= %00001111           '$0F = disable A/D converter
+    TRISB = %00000001   
+    TRISC = %00000000
+    TRISD = %01000000
+    TRISE = %00000111
+    INTCON = %00000000          ' Enable global interrupt, Enable INT0 interrupt (RB0)
+    INTCON2.6=1                 ' Enable INT0 on rising edge
+    T2CON.2 = 0                 '1=ON 0=OFF
+    PortB = %00000000
+    PortC = %00000000
+    PortD = %00000000
+    PortE = %00000000
+    I2CDeviceEEprom=$A0         'DeviceID 10100000 = $A0 = %1010 E2=0, E1=0, E0=0 R/W=0
+                                'Command    SAD[6:1]    SAD[0] = SDO    R/W     SAD+R/W
+    I2CDevice_3D_read=$39       'Read       001110      0               1       00111001 (39h)
+    I2CDevice_3D_write=$38      'Write      001110      0               0       00111000 (38h)
+    I2CDevice_RTC_write=$D0
+    I2CDevice_RTC_read=$D1
+    Refresh = 1                 'Refresh disabled
+    High Power_I2C_1Wire
+    High Lcd_Vcc
+    gosub Light_on
+    Gosub Lcd_INIT
+@  if (Logos == 1)
+    gosub RTC_Init             
+@  endif
+    Alusta_alarm = 0
+    Alusta_vaihde = 0
+    Show_alarm = 0
+    DS18B20 = 0
+    DS18B20_next = 0
+    goto Mainloop
+    
+init_alarm:
+    ADCON1= %00001111           '$0F = disable A/D converter
+    Accel_Alarm = 0
+    Alusta_vaihde = 0
+    Alusta_alarm = 1
+    Alarm_1st_time = 0
+    Alarm_2nd = 0
+    COUNTER = 0
+    COUNTER2 = 0    
+    temp1 = 0
+    High Lcd_Vcc
+    Pause 250
+    Gosub Lcd_INIT
+    Gosub Lcd_Clear
+'-------------------------------------
+@  if (Logos == 1)
+    gosub Wheel
+@  endif
+    if Sleep_alarm = 1 then
+            if Emergency = 0 Then    'Hätävilkkuoptio
+                gosub Lcd_Clear
+                gosub Alarm_Selection           
+                high Power_I2C
+                pause 20
+                gosub Accelerometer_Init
+                gosub Zero_EEPROM
+            endif   
+        else
+            gosub Sleep_Logo
+    endif             
+    Sleep_bit = 0
+    return
+    
+init_vaihde:   
+    High Power_I2C_1Wire        'I2C Power ON
+    High Lcd_Vcc
+    ADCON1 = %00001110		    'Set PORTA 0=Ana, 1&2&3&4&5=Dig
+    Pause 250
+    Gosub Lcd_INIT
+    Gosub Lcd_Clear
+    Temp = 0
+    gosub Temp_start
+@  if (Logos == 1)
+    gosub Kawa_Logo
+@  endif
+    if Mid = 1 then
+            if T2CON.2 = 1 then
+                    Hpwm 1, Intensity, 1953 '1221 = 20MHz min, 2442 = 40MHz min, 1953 = 32MHz
+                else  
+                    gosub Light_on
+            endif    
+        else
+            CCP1CON = %00000000
+            T2CON.2 = 0
+            low PortC.2
+    endif                  
+@  if (Nokia3310_7110 == 1)
+    High Power_I2C
+@  endif
+    pause 1000
+@  if (Logos == 1)    
+    Gosub Lcd_Clear
+@  endif
+    if Show_alarm = 1 then
+        gosub Alarm_show
+        Gosub Lcd_Clear
+    endif
+@  if (Logos == 1)
+    gosub Wheel
+    Gosub Lcd_Clear
+@  endif
+    '-------------
+    Vaihteet = 0
+    Counter = 20
+    Counter2 = 0
+    Reset = 1
+    Naytto = 0
+    Emergency = 0
+    Marker = 0
+    Key_delay = 0
+    Alusta_vaihde = 1
+    Alusta_alarm = 0
+    '-------------
+    gosub Display_Draw  
+    Gosub Gear0
+    Show_alarm = 0
+    gosub Meas_ADC
+    gosub Temp_meas
+    Temp1_old = Temp1
+    Temp2_old = Temp2
+    gosub Interrupt_Handler
+    return
+'###############################################################################

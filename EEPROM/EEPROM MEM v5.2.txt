@@ -1,0 +1,58 @@
+Kawa Logo  (504 char)
+0000h (0) - 01F7h (503)
+
+Numero blokit
+1) 01F8h (504) - 0217h (535) 
+2) 0218h (536) - 0237h (567)
+3) 0238h (568) - 0257h (599)
+4) 0258h (600) - 0277h (631)
+5) 0278h (632) - 0297h (665)
+6) 0298h (664) - 02B7h (695)
+7) 02B8h (696) -02D7h (727)
+
+ASCII merkit
+02D8h (728) => 0 + 6
+2DEh ....
+0511h (1297)
+94 merkkiä
+
+Stop Logo 48
+0518h = 1304 (288 char)
+
+Muu Vaara 54
+0638h = 1592 (324 char)
+
+Alarm Active In
+077Ch = 1916 (504 char)
+
+Sleep Selection
+0974h = 2420 (504 char)
+
+Wheel 1
+0B6Ch = 2924 (288 char)
+
+Wheel 2 
+0C8Ch = 3212 (288 char)
+
+Wheel 3
+0DACh = 3500 (288 char)
+
+Motor
+0ECC = 3788 (30 char)
+
+Air
+0EEA = 3818 (30 char)
+
+Batt
+0F08 = 3848 (30 char)
+
+[NEW]
+0F26 = 3878 
+
+Oil
+0F68  (504 char)
+
+Time
+1160 = 4448 (30 char) 
+
+117E free

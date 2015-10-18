@@ -1,0 +1,14 @@
+'------------------------------------------------------------------------------- 
+' Main program starts here
+'-------------------------------------------------------------------------------      
+Mainloop:
+    IF Key = 0 Then
+            If Alusta_alarm = 0 then gosub init_alarm
+            goto Mainloop1
+        else
+            if Alusta_vaihde = 0 then gosub init_vaihde
+            @ INT_ENABLE  TMR1_INT
+            GOSUB StartTimer
+            goto MainLoop2
+    endif
+'-------------------------------------------------------------------------------

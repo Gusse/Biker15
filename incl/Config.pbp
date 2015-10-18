@@ -1,0 +1,45 @@
+'###############################################################################
+' CONFIGURATION SET ¤1
+'PortA
+Down            VAR PortA.1     'Hall sensor for Down pedal
+Mid             VAR PortA.2     'Hall sensor for Mid stage
+Up              VAR PortA.3     'Hall sensor for Up pedal
+Neut_Light      VAR PortA.4     'Neutral light
+Key             VAR PortA.5     'Start key
+'               VAR PortA.6     '
+'               VAR PortA.7     '
+ 
+'PortB
+Lcd_CLK         VAR PortB.1     'LCD Clock
+Lcd_DC          VAR PortB.2     'LCD Data/Command
+Lcd_CS          VAR PortB.3     'LCD Chip select
+Lcd_RST         VAR PortB.4     'LCD Reset
+Lcd_VCC         VAR PortB.5     'LCD Power
+Lcd_SDA         VAR PortB.6     'LCD Data
+
+'PortC
+Light_R         VAR PortC.0     'Blink light right
+Light_L         VAR PortC.1     'Blink light left
+'HPWM           VAR PortC.2      PWM
+Power_I2C_1Wire VAR PortC.3     'I2C and 1Wire power
+'               VAR PortC.4     '
+Horn            VAR PortC.5     'Horn relay output
+Oiler           VAR PortC.6     'Chain oiler relay output
+SDA_3D          var PortC.7     'SDA_3D           
+
+'PortD
+SCL             VAR PortD.0     'I2C Clock
+SDA             VAR PortD.1     'I2C Data
+Comm_Pin        VAR PortD.2     '1-wire Data-Pin
+LED             VAR PortD.3     'Alarm LED
+SCL_3D          VAR PortD.4     'SCL_3D
+Power_I2C       VAR PortD.5     'Power_I2C
+Int1_3D         VAR PortD.6     'Int1_3D
+'               VAR PortD.7     '
+
+'PortE
+Lights_ON_OFF   VAR PORTE.0     'Light ON OFF
+Menu            VAR PORTE.1     'Menu
+'               VAR PORTE.2     '
+
+'###############################################################################

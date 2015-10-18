@@ -1,0 +1,66 @@
+Vaihteet        VAR byte        'Vaihde 
+Counter         var byte        '1s period for Temp and Volt readings
+Counter2        var word        '30s refresh näytölle
+Temp            var Byte        'TEMP
+Temp1           VAR byte        'Temperature 1
+Temp2           var byte        'Temperature 2
+Temp1_old       VAR byte        'Temperature 1 edellinen lukema
+Temp2_old       var byte        'Temperature 2 edellinen lukema    
+Temp_CLK        var byte        'Temp variable for CLK
+RTC_Clock       var byte        'Real time clock
+Marker          var byte        'Valikko
+Key_delay       var byte        'Polkimen asento buffer
+
+Alusta_vaihde   var bit         'Vaihteen alustus
+Alusta_alarm    var bit         'Alarm alustus
+Alarm_1st_time  var bit         'Ensimmäinen hälyytys
+Alarm_2nd       Var Bit         'Hälyytys uusinta
+Sleep_alarm     var bit         'Sleep tai alarm tila
+Show_alarm      var bit         'Hälyytyksen näyttö LCD:llä
+Neg             var Bit         'Negatiivinen lämpötilan merkki
+Sleep_bit       var bit         'Sleep -tila
+Refresh         var bit         'Refresh -tila
+Light_ctrl      Var bit         'Valo -tila
+Accel_Alarm     var Bit         '3D accelerator interrupt
+Reset           var bit         'Reset -tila polkimille
+Naytto          var bit         'LCD näytölle kirjoitus -tila
+Emergency       var bit         'Hätävilkku -tila
+
+A               var bit         'Logo position variable
+DS18B20         var bit         'DS18B20 precense bit
+DS18B20_next    var bit
+
+'LCD
+Intensity       var byte        'LCD:n intensiteetti
+Contrast        var byte
+
+'LCD Common
+i               var Byte
+j               var Word
+k               var Byte
+PosX            var Byte
+PosY            var Byte
+LcdStr          var Byte [4]
+Lcd_Data        var Byte [6]
+
+'Extra Variable for 7110 LCD
+ColumnNum       var byte        'Column number
+LowBits         VAR BYTE        'Low Bits for column
+HighBits        VAR BYTE        'High Bits for Column
+
+'1Wire stuff
+R_Temp          VAR	WORD        ' RAW Temperature readings
+DS18B20_9bit    CON %00011111   ' 93.75ms, 0.5°C
+
+'I2C stuff
+I2CDeviceEEprom     var byte    '24C32 EEPROM
+I2CAddressEEprom    var word    '24C32 EEPROM
+I2CDevice_3D_read   var byte    '3D accelerometer at read mode
+I2CDevice_3D_write  var byte    '3D accelerometer at write mode
+I2CAddress_3D       var byte    '3D accelerometer
+I2CDevice_RTC_read  var byte    'RTC at read mode
+I2CDevice_RTC_write var byte    'RTC at write mode
+I2CAddress_RTC      var byte    'RTC
+
+'ADCIN
+adval	var byte				' Create adval to store result

@@ -1,0 +1,74 @@
+Interrupt_Handler:
+ASM
+INT_LIST  macro    ; IntSource,        Label,  Type, ResetFlag?
+        INT_Handler   TMR1_INT,   ReloadTMR1,   ASM,  no    ; MUST be first
+        INT_Handler   TMR1_INT,   _T1handler,   PBP,  yes
+    endm
+    INT_CREATE               ; Creates the interrupt processor
+ENDASM
+
+    @Freq       = 20                 ; Frequency of Interrupts in Hz
+    @Prescaler  = 8                   ; Timers Prescaler setting
+    T1CON = $30                       ; $10 = Prescaler
+Return
+
+'-------------------------------------------------------------------------------      
+;____This routine is Called on each TMR1 Interrupt____________________________
+T1handler:      'Interrupt will happen every 10ms
+@  if (Debug_Interrupt == 1)
+        High PortC.4                                                                           
+@  endif
+    gosub Polkimentila
+    gosub Poljin
+    gosub Temperature
+    Gosub Refresh_calc
+    if Counter <> 1 then
+        gosub Display_Gear
+    endif
+@  if (Debug_Interrupt == 1)
+        LOW PortC.4                                                                           
+@  endif
+@ INT_RETURN
+
+;---[TMR1 reload - interrupt handler]-----------------------------------------
+ASM                               ; Calculate Timer Reload Constant
+ReloadInst  = 8                   ; # of Intructions used to reload timer
+  if ((Prescaler == 1)||(Prescaler == 2)||(Prescaler == 4)||(Prescaler == 8))
+MaxCount    = 65536 + (ReloadInst / Prescaler)
+TimerReload = MaxCount - (OSC*1000000/4/Prescaler/Freq)
+    if ((TimerReload < 0) || (TimerReload > (65535-ReloadInst)))
+        error Invalid Timer Values - check "OSC", "Freq" and "Prescaler"
+    endif
+  else
+      error Invalid Prescaler
+  endif
+ENDASM
+
+@Timer1 = TMR1L                   ; map timer registers to a word variable
+Timer1       VAR WORD EXT
+TimerReload  CON EXT              ; Get the External Constant
+TMR1ON       VAR T1CON.0          ; Alias the Timers ON/OFF bit
+
+;---Reload Timer1------
+ASM
+ReloadTMR1
+    MOVE?CT  0, T1CON, TMR1ON     ;  1     stop timer
+    MOVLW    LOW(TimerReload)     ;  1     Add TimerReload to the 
+    ADDWF    TMR1L,F              ;  1     value in Timer1
+    BTFSC    STATUS,C             ;  1/2
+    INCF     TMR1H,F              ;  1
+    MOVLW    HIGH(TimerReload)    ;  1
+    ADDWF    TMR1H,F              ;  1
+    MOVE?CT  1, T1CON, TMR1ON     ;  1     start timer
+  INT_RETURN
+ENDASM
+
+;---Start/Stop controls -----
+StartTimer:
+    Timer1  = TimerReload         ; Load Timer
+    TMR1ON = 1                    ; start timer
+RETURN
+
+StopTimer:
+    TMR1ON = 0                    ; stop timer
+RETURN

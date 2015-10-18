@@ -1,0 +1,240 @@
+'-------------------------------------------------------------------------------
+' Vaiheosuus
+'-------------------------------------------------------------------------------
+Mainloop2:
+    if Key = 0 then
+        @ INT_DISABLE  TMR1_INT        
+        gosub StopTimer
+        goto Mainloop
+    endif
+    if Mid = 0 and Menu = 0 then goto Buttons
+    pause 250
+    goto Mainloop2
+
+'-------------------------------------------------------------------------------
+Poljin:
+    if Neut_Light = 0 then
+            gosub Green_Light
+        else
+            if Mid = 0 then
+                    gosub Neutraali
+                else
+                    if Down = 0 and Reset = 1 then gosub Alaspain 
+                    if Up = 0 and Reset = 1 then gosub Ylospain
+            endif
+    endif            
+    return
+'-------------------------------------------------------------------------------
+Polkimentila:    
+    Key_delay = Key_delay << 1
+    Key_delay.0 = Mid
+    Sleep_alarm = Key_delay.7  
+    return
+'-------------------------------------------------------------------------------
+Green_Light:
+    If Vaihteet <> 0 then
+        gosub Gear0
+        Vaihteet = 0
+        Reset = 1
+    endif           
+    return
+'-------------------------------------------------------------------------------
+Neutraali:
+    if Down = 1 and Up = 1 then
+        Reset = 1
+    endif  
+    return
+'-------------------------------------------------------------------------------
+Alaspain:
+    Naytto = 1
+    Reset = 0   
+    if Vaihteet =< 1 then
+            Vaihteet = 1
+        else
+            Vaihteet = Vaihteet - 1
+    endif
+    return
+'-------------------------------------------------------------------------------
+Ylospain:
+    Naytto = 1
+    Reset = 0
+    if Vaihteet => 5 then
+            Vaihteet = 6
+        else
+            if Vaihteet = 0 then
+                    Vaihteet = 2
+                else
+                    Vaihteet = Vaihteet + 1
+            endif
+    endif
+    return
+'-------------------------------------------------------------------------------
+Display_Gear:
+    If Naytto = 1 then
+        Naytto = 0
+        if Vaihteet = 6 then gosub Gear6
+        if Vaihteet = 5 then gosub Gear5
+        if Vaihteet = 4 then gosub Gear4
+        if Vaihteet = 3 then gosub Gear3
+        if Vaihteet = 2 then gosub Gear2
+        if Vaihteet = 1 then gosub Gear1
+        if Vaihteet = 0 then gosub Gear0
+    endif
+    return
+'-------------------------------------------------------------------------------
+Refresh_calc:
+    if Refresh = 0 then
+        If Counter2 = 600 then
+                Counter2 = 0
+                @ INT_DISABLE  TMR1_INT
+                gosub Display_Refresh
+                @ INT_ENABLE  TMR1_INT
+                Naytto = 1
+            else
+                Counter2 = Counter2 + 1
+        endif
+    endif
+    return
+'-------------------------------------------------------------------------------
+Gear1:
+    for TEMP = 0 to 5
+        PosX=6
+@  if (Nokia3310_7110 == 0)
+        PosY=(TEMP)
+@  endif
+@  if (Nokia3310_7110 == 1)
+        PosY=(TEMP+1)
+@  endif
+        Gosub Lcd_GotoXY
+        if TEMP = 0 or TEMP = 2 or TEMP = 3 or TEMP = 4 then j=536:gosub EEMemory
+        if TEMP = 1 then j=568:gosub EEMemory
+        if TEMP = 5 then j=600:gosub EEMemory
+    next TEMP 
+    gosub Lcd_Home
+    return
+
+Gear2:
+    for TEMP = 0 to 5
+        PosX=6
+@  if (Nokia3310_7110 == 0)
+        PosY=(TEMP)
+@  endif
+@  if (Nokia3310_7110 == 1)
+        PosY=(TEMP+1)
+@  endif
+        Gosub Lcd_GotoXY
+        if TEMP = 0 or TEMP = 2 or TEMP = 5 then j=504:gosub EEMemory
+        if TEMP = 1 then j=632:gosub EEMemory
+        if TEMP = 3 or TEMP = 4 then j=664:gosub EEMemory
+    next TEMP
+    gosub Lcd_Home
+    return
+    
+Gear3:
+    for TEMP = 0 to 5
+        PosX=6
+@  if (Nokia3310_7110 == 0)
+        PosY=(TEMP)
+@  endif
+@  if (Nokia3310_7110 == 1)
+        PosY=(TEMP+1)
+@  endif
+        Gosub Lcd_GotoXY
+        if TEMP = 0 or TEMP = 2 or TEMP = 5 then j=504:gosub EEMemory
+        if TEMP = 1 or TEMP = 3 or TEMP = 4 then j=632:gosub EEMemory
+    next TEMP
+    gosub Lcd_Home
+    return
+    
+Gear4:
+    for TEMP = 0 to 5
+        PosX=6
+@  if (Nokia3310_7110 == 0)
+        PosY=(TEMP)
+@  endif
+@  if (Nokia3310_7110 == 1)
+        PosY=(TEMP+1)
+@  endif
+        Gosub Lcd_GotoXY
+        if TEMP = 0 or TEMP = 1 then j=696:gosub EEMemory
+        if TEMP = 2 then j=504:gosub EEMemory
+        if TEMP = 3 or TEMP = 4 or TEMP = 5 then j=632:gosub EEMemory
+    next TEMP
+    gosub Lcd_Home
+    return
+    
+Gear5:
+    for TEMP = 0 to 5
+        PosX=6
+@  if (Nokia3310_7110 == 0)
+        PosY=(TEMP)
+@  endif
+@  if (Nokia3310_7110 == 1)
+        PosY=(TEMP+1)
+@  endif
+        Gosub Lcd_GotoXY
+        if TEMP = 0 or TEMP = 2 or TEMP = 5 then j=504:gosub EEMemory
+        if TEMP = 1 then j=664:gosub EEMemory
+        if TEMP = 3 or TEMP = 4 then j=632:gosub EEMemory
+    next TEMP
+    gosub Lcd_Home
+    return
+
+Gear6:
+    for TEMP = 0 to 5
+        PosX=6
+@  if (Nokia3310_7110 == 0)
+        PosY=(TEMP)
+@  endif
+@  if (Nokia3310_7110 == 1)
+        PosY=(TEMP+1)
+@  endif
+        Gosub Lcd_GotoXY
+        if TEMP = 0 or TEMP = 2 or TEMP = 5 then j=504:gosub EEMemory
+        if TEMP = 1 then j=664:gosub EEMemory
+        if TEMP = 3 or TEMP = 4 then j=696:gosub EEMemory
+    next TEMP
+    gosub Lcd_Home
+    return
+    
+Gear0:
+    for TEMP = 0 to 5
+        PosX=6
+@  if (Nokia3310_7110 == 0)
+        PosY=(TEMP)
+@  endif
+@  if (Nokia3310_7110 == 1)
+        PosY=(TEMP+1)
+@  endif
+        Gosub Lcd_GotoXY
+        if TEMP = 0 or TEMP = 5 then j=504:gosub EEMemory
+        if TEMP = 1 or TEMP = 2 or TEMP = 3 or TEMP = 4 then j=696:gosub EEMemory
+    next TEMP
+    gosub Lcd_Home
+    return
+        
+EEMemory:
+    for i = 0 to 4
+        I2CAddressEEprom = (j+(i*6)):gosub Lue_I2C
+    next i
+    Return
+'-------------------------------------------------------------------------------
+Buttons:
+    if Menu = 0 and Lights_ON_OFF = 0 and Vaihteet <> 0 then
+        pause 500
+        if Menu = 0 and Lights_ON_OFF = 0 and Vaihteet <> 0 then 
+            @ INT_DISABLE  TMR1_INT        
+            gosub StopTimer
+            goto Chain_Oiler
+        endif
+    endif
+    if Menu = 0 and Lights_ON_OFF = 1 and Vaihteet = 0 then
+        pause 250
+        if Menu = 0 and Lights_ON_OFF = 1 and Vaihteet = 0 then
+            @ INT_DISABLE  TMR1_INT        
+            gosub StopTimer
+            goto Valikko
+        endif
+    endif
+    goto Mainloop
+'###############################################################################

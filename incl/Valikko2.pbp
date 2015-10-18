@@ -1,0 +1,239 @@
+'-------------------------------------------------------------------------------
+' Valikko2-osuus
+'-------------------------------------------------------------------------------
+Valikko2:
+    Gosub Lcd_Clear
+    Marker = 0
+    gosub Detection2
+
+Valikko2_loop:
+    pause 10
+    if Lights_ON_OFF = 0 AND key = 1 then goto Valikko2_loop
+    pause 100
+    goto Valikko2_sub_sub
+
+'-------------------------------------------------------------------------------    
+Detection2:
+    gosub Lcd_Clear
+    PosX=21:PosY=0:Gosub Lcd_GotoXY
+    I2CAddressEEprom =   938:gosub Lue_I2C  'C
+    I2CAddressEEprom =  1010:gosub Lue_I2C  'O
+    I2CAddressEEprom =  1004:gosub Lue_I2C  'N
+    I2CAddressEEprom =   956:gosub Lue_I2C  'F
+    I2CAddressEEprom =   974:gosub Lue_I2C  'I
+    I2CAddressEEprom =   962:gosub Lue_I2C  'G
+
+    PosX=12:PosY=2:Gosub Lcd_GotoXY
+    I2CAddressEEprom =  1028:gosub Lue_I2C  'R
+    I2CAddressEEprom =  1142:gosub Lue_I2C  'e
+    I2CAddressEEprom =  1148:gosub Lue_I2C  'f
+    I2CAddressEEprom =  1220:gosub Lue_I2C  'r
+    I2CAddressEEprom =  1142:gosub Lue_I2C  'e
+    I2CAddressEEprom =  1226:gosub Lue_I2C  's
+    I2CAddressEEprom =  1160:gosub Lue_I2C  'h
+    I2CAddressEEprom =   728:gosub Lue_I2C  'Space
+
+    PosX=12:PosY=3:Gosub Lcd_GotoXY
+    I2CAddressEEprom =  932:gosub Lue_I2C   'B
+    I2CAddressEEprom = 1184:gosub Lue_I2C   'l
+    I2CAddressEEprom = 1166:gosub Lue_I2C   'i
+    I2CAddressEEprom = 1196:gosub Lue_I2C   'n
+    I2CAddressEEprom = 1178:gosub Lue_I2C   'k
+    I2CAddressEEprom =  1142:gosub Lue_I2C  'e
+    I2CAddressEEprom =  1220:gosub Lue_I2C  'r    
+    I2CAddressEEprom =  728:gosub Lue_I2C   'Space
+
+    PosX=12:PosY=4:Gosub Lcd_GotoXY
+    I2CAddressEEprom = 1040:gosub Lue_I2C   'T
+    I2CAddressEEprom = 1142:gosub Lue_I2C   'e
+    I2CAddressEEprom = 1226:gosub Lue_I2C   's
+    I2CAddressEEprom = 1232:gosub Lue_I2C   't
+    I2CAddressEEprom = 1226:gosub Lue_I2C   's
+
+    PosX=12:PosY=5:Gosub Lcd_GotoXY
+    I2CAddressEEprom =  950:gosub Lue_I2C   'E
+    I2CAddressEEprom =  1064:gosub Lue_I2C  'X
+    I2CAddressEEprom =  974:gosub Lue_I2C   'I
+    I2CAddressEEprom =  1040:gosub Lue_I2C  'T    
+
+Detection2_sub:
+    PosX=61:PosY=2:Gosub Lcd_GotoXY
+    if Refresh = 0 then
+            gosub On_Display
+        else
+            gosub Off_Display
+    endif
+    
+    PosX=61:PosY=3:Gosub Lcd_GotoXY
+    if Emergency = 1 then
+            gosub On_Display
+        else
+            gosub Off_Display
+    endif
+    
+    if Marker = 0 then
+            PosX=3:PosY=5:Gosub Lcd_GotoXY
+            I2CAddressEEprom =  728:gosub Lue_I2C   'Space
+            PosX=3:PosY=2:Gosub Lcd_GotoXY
+            I2CAddressEEprom =  908:gosub Lue_I2C   '>
+            PosX=3:PosY=3:Gosub Lcd_GotoXY
+            I2CAddressEEprom =  728:gosub Lue_I2C   'Space        
+            PosX=3:PosY=4:Gosub Lcd_GotoXY
+            I2CAddressEEprom =  728:gosub Lue_I2C   'Space
+    endif                   
+
+    if Marker = 1 then
+            PosX=3:PosY=2:Gosub Lcd_GotoXY
+            I2CAddressEEprom =  728:gosub Lue_I2C   'Space
+            PosX=3:PosY=3:Gosub Lcd_GotoXY
+            I2CAddressEEprom =  908:gosub Lue_I2C   '>        
+            PosX=3:PosY=4:Gosub Lcd_GotoXY
+            I2CAddressEEprom =  728:gosub Lue_I2C   'Space
+            PosX=3:PosY=5:Gosub Lcd_GotoXY
+            I2CAddressEEprom =  728:gosub Lue_I2C   'Space
+    endif                   
+
+    if Marker = 2 then
+            PosX=3:PosY=2:Gosub Lcd_GotoXY
+            I2CAddressEEprom =  728:gosub Lue_I2C   'Space
+            PosX=3:PosY=3:Gosub Lcd_GotoXY
+            I2CAddressEEprom =  728:gosub Lue_I2C   'Space        
+            PosX=3:PosY=4:Gosub Lcd_GotoXY
+            I2CAddressEEprom =  908:gosub Lue_I2C   '>
+            PosX=3:PosY=5:Gosub Lcd_GotoXY
+            I2CAddressEEprom =  728:gosub Lue_I2C   'Space
+    endif
+    
+    if Marker = 3 then
+            PosX=3:PosY=2:Gosub Lcd_GotoXY
+            I2CAddressEEprom =  728:gosub Lue_I2C   'Space
+            PosX=3:PosY=3:Gosub Lcd_GotoXY
+            I2CAddressEEprom =  728:gosub Lue_I2C   'Space
+            PosX=3:PosY=4:Gosub Lcd_GotoXY
+            I2CAddressEEprom =  728:gosub Lue_I2C   'Space        
+            PosX=3:PosY=5:Gosub Lcd_GotoXY
+            I2CAddressEEprom =  908:gosub Lue_I2C   '>
+    endif
+                      
+    return
+      
+'-------------------------------------------------------------------------------    
+Valikko2_sub:
+    pause 100
+    if Menu = 0 AND key = 1 then goto Valikko2_sub
+    Marker = 0
+    gosub Detection2_sub
+Valikko2_sub_sub:
+    If key = 0 or Mid = 1 then goto Hold_Moment    
+    if Lights_ON_OFF = 0 then
+        pause 100
+        if Lights_ON_OFF = 0 then goto Refresh_Valikko
+    endif          
+    if Menu = 0 then
+        pause 100
+        if Menu = 0 then goto Valikko2_sub2
+    endif          
+    goto Valikko2_sub_sub
+
+Valikko2_sub2:
+    pause 100
+    if Menu = 0 AND key = 1 then goto Valikko2_sub2
+    Marker = 1
+    gosub Detection2_sub  
+Valikko2_sub2_sub:    
+    If key = 0 or Mid = 1 then goto Hold_Moment
+    if Lights_ON_OFF = 0 then
+        pause 100
+        if Lights_ON_OFF = 0 then goto Emergency_Valikko
+    endif          
+    if Menu = 0 then
+        pause 100
+        if Menu = 0 then goto Valikko2_sub3
+    endif          
+    goto Valikko2_sub2_sub
+
+Valikko2_sub3:
+    pause 100
+    if Menu = 0 AND key = 1 then goto Valikko2_sub3
+    Marker = 2
+    gosub Detection2_sub  
+Valikko2_sub3_sub:    
+    If key = 0 or Mid = 1 then goto Hold_Moment
+    if Lights_ON_OFF = 0 then
+        pause 100
+        if Lights_ON_OFF = 0 then goto Tests_Valikko
+    endif          
+    if Menu = 0 then
+        pause 100
+        if Menu = 0 then goto Valikko2_sub4
+    endif          
+    goto Valikko2_sub3_sub
+
+Valikko2_sub4:
+    pause 100
+    if Menu = 0 AND key = 1 then goto Valikko2_sub4
+    Marker = 3
+    gosub Detection2_sub  
+Valikko2_sub4_sub:
+    If key = 0 or Mid = 1 then goto Hold_Moment    
+    if Lights_ON_OFF = 0 then
+        pause 100
+        if Lights_ON_OFF = 0 then goto Hold_Moment3
+    endif          
+    if Menu = 0 then
+        pause 100
+        if Menu = 0 then goto Valikko2_sub
+    endif          
+    goto Valikko2_sub4_sub    
+'-------------------------------------------------------------------------------
+Refresh_Valikko:
+    IF Refresh = 0 then
+            Refresh = 1
+        else
+            Refresh = 0
+    ENDIF
+    gosub Detection2_sub
+Refresh_Valikko_sub:
+    pause 100
+    if Lights_ON_OFF = 0 AND key = 1 then goto Refresh_Valikko_sub
+    goto Valikko2_sub_sub
+
+Emergency_Valikko:
+    IF Emergency = 0 then
+            Emergency = 1
+        else
+            Emergency = 0
+    ENDIF
+    gosub Detection2_sub
+Emergency_Valikko_sub:
+    pause 100
+    if Lights_ON_OFF = 0 AND key = 1 then goto Emergency_Valikko_sub
+    goto Valikko2_sub2_sub
+
+Tests_Valikko:
+    pause 500
+    for TEMP = 0 to 1
+        high Horn
+        pause 20  
+        low Horn
+        pause 1000
+    next TEMP
+    pause 500
+    for TEMP = 0 to 3
+        high Light_L
+        high Light_R
+        pause 250
+        low Light_L
+        low Light_R
+        pause 1000
+    next TEMP
+    goto Valikko2_sub3_sub    
+'-------------------------------------------------------------------------------
+
+Hold_Moment3:
+    pause 100
+    if Lights_ON_OFF = 0 AND key = 1 then goto Hold_Moment3
+    Marker = 2
+    Gosub Lcd_Clear
+    gosub Detection
+    goto Valikko_sub3

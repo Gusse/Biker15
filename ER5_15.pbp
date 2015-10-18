@@ -1,0 +1,68 @@
+'-------------------------------------------------------------------------------
+' Biker15 for PIC18F4520 and Nokia 3310/7110 display                                                 
+'-------------------------------------------------------------------------------
+' Include & Definition section 
+'-------------------------------------------------------------------------------  
+DEFINE Debug_Interrupt 0                        '0 = disabled, 1 = Enabled
+DEFINE Logos 1                                  '0 = disabled, 1 = Enabled
+DEFINE BikerLCD 1                               '0 = ZZR, 1 = ER5
+DEFINE BikerSensor 1                            '0 = ZZR, 1 = ER5
+DEFINE Nokia3310_7110 1                         '0 = 3310, 1 = 7110
+
+INCLUDE "incl\PIC18F4520_config.pbp"
+
+'----- Interrupt ------------------------------
+INCLUDE "incl\DT_INTS-18.bas"                'Base Interrupt System
+INCLUDE "incl\ReEnterPBP-18.bas"             'Include if using PBP interrupts
+    
+'----- Basics ---------------------------------
+include "incl\Definitions.pbp"          'Text file for configurations
+include "incl\Variables.pbp"
+
+'----- Config Setups --------------------------
+include "incl\Config.pbp"
+
+'----- LCD Selections -------------------------
+include "incl\LCD_5V.pbp"
+
+'----- Inits and ADC Definitions --------------
+include "incl\Inits.pbp"
+include "incl\Interrupt.pbp"
+include "incl\ADCIN.pbp"
+
+define OSC 32                                   '8MHz int_clk with 4x PLL = 32MHz 
+
+'----- Version Info ---------------------------
+include "incl\Version_Info.pbp"
+
+'-------------------------------------------------------------------------------
+' Main program: Mainloop1 = Hälytinosuus, Mainloop2 = Vaihdeosuus  
+'-------------------------------------------------------------------------------
+include "incl\Mainloop.pbp"
+include "incl\Mainloop1.pbp"            'Alarm-osuus     
+include "incl\Mainloop2.pbp"            'Vaihdeosuus
+
+'----- Logot ----------------------------------
+include "incl\Logos.pbp"
+   
+'----- Valikko --------------------------------
+include "incl\Valikko.pbp"
+include "incl\Valikko2.pbp"
+
+'----- LCD Setups -----------------------------               
+include "incl\LCD_Fast.pbp"                   
+include "incl\Display_Refresh.pbp"
+
+'----- LED ------------------------------------
+include "incl\Light.pbp"
+
+'----- 3D Accelerometer & RTC -----------------
+include "incl\3D.pbp"              
+include "incl\RTC.pbp"                
+
+'----- TEMP and ADC Setups --------------------
+include "incl\Temp_ADC.pbp"             
+
+'----- Chain Oiler ----------------------------
+include "incl\Oiler.pbp"        
+'-------------------------------------------------------------------------------

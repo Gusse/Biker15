@@ -1,0 +1,39 @@
+'------------------------------------------------------------------------------- 
+' Main program starts here
+'-------------------------------------------------------------------------------      
+'Potential 
+Light_on:
+    Hpwm 1, 0, 1953
+    T2CON.2 = 1
+    for i = 0 to Intensity
+        TEMP = (i*i)/(92-i)                                 
+        Hpwm 1, TEMP, 1953      '1221 = 20MHz min, 2442 = 40MHz min, 1953 = 32MHz
+        pause 15
+    next i
+    return
+
+Light_off:
+    for i = Intensity to 0 step -1                         
+        TEMP = (i*i)/(92-i)                                 
+        Hpwm 1, TEMP, 1953      '1221 = 20MHz min, 2442 = 40MHz min, 1953 = 32MHz
+        pause 15
+    next i
+    CCP1CON = %00000000
+    T2CON.2 = 0
+    low PortC.2
+    RETURN
+'------------------------------------------------------------------------------- 
+Lights_Ctrl_Det:    
+    if T2CON.2 = 0 then
+            Light_ctrl = 0
+        else
+            Light_ctrl = 1
+    endif
+    Return
+
+Lights_Forced_ON:    
+    If T2CON.2 = 0 then
+            gosub Light_on
+    endif
+    return
+'###############################################################################

@@ -1,0 +1,35 @@
+    '------------------------------------------------------------------------------- 
+' Version displayed
+'-------------------------------------------------------------------------------
+Version_Info:
+    PosX=3:PosY=0:Gosub Lcd_GotoXY
+Version_Info_sub:
+    I2CAddressEEprom =  1244:gosub Lue_I2C  'v for version
+
+    LcdStr(0) = 1   '1st DIGIT 
+    LcdStr(1) = 2   '2st Decimal DIGIT
+    LcdStr(2) = 0   '1nd Decimal DIGIT
+
+    Lcd_Data=LcdStr(0)
+    Gosub Lcd_SentChar
+    high Lcd_DC
+    Lcd_Data=$40:Gosub Write_Lcd_Single
+    Lcd_Data=$00:Gosub Write_Lcd_Single
+
+    Lcd_Data=LcdStr(1)
+    Gosub Lcd_SentChar
+
+    if LcdStr(2) <> 0 then
+        Lcd_Data=LcdStr(2)
+        Gosub Lcd_SentChar
+    endif
+    Return
+
+'------------------------------------------------------------------------------- 
+'RTC
+DATA @0,00              'Seconds
+DATA @1,00              'Minutes
+DATA @2,08              'Hours
+DATA @4,01              'Date
+DATA @5,06              'Month
+DATA @6,15              'Year
