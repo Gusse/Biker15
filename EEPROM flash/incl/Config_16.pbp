@@ -1,0 +1,9 @@
+'###############################################################################
+SDA             VAR PortA.6     'I2C Data
+SCL             VAR PortA.7     'I2C Clock
+Power_I2C       VAR PortC.3     'I2C power
+LED             VAR PortD.3     'Error
+Light_R         VAR PortC.0     'Ready
+
+
+'###############################################################################

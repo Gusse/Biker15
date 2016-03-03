@@ -1,0 +1,28 @@
+'###############################################################################
+'------------------------------------------------------------------------------- 
+' 1st init and mode change inits
+'-------------------------------------------------------------------------------    
+init:
+    OSCCON = $70                'Int CLK 8MHz
+    OSCTUNE.6 = 1               'PLL 4x
+    ADCON1 = %00001110		    'Set PORTA 0=Ana, 1&2&3&4&5=Dig
+
+    gosub Settings1
+    
+    INTCON = %00000000          ' Enable global interrupt, Enable INT0 interrupt (RB0)
+    INTCON2.6=1                 ' Enable INT0 on rising edge
+    T2CON.2 = 0                 '1=ON 0=OFF
+
+    PortB = %00000000
+    PortC = %00000000
+    PortD = %00000000
+    PortE = %00000000
+
+    I2CDeviceEEprom=$A0         'DeviceID 10100000 = $A0 = %1010 E2=0, E1=0, E0=0 R/W=0
+    High Power_I2C
+    Delay = 0
+    pause 500
+
+    goto Mainloop
+        
+'###############################################################################

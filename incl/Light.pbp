@@ -6,16 +6,16 @@ Light_on:
     Hpwm 1, 0, 1953
     T2CON.2 = 1
     for i = 0 to Intensity
-        TEMP = (i*i)/(92-i)                                 
-        Hpwm 1, TEMP, 1953      '1221 = 20MHz min, 2442 = 40MHz min, 1953 = 32MHz
+        Temp(0) = (i*i)/(92-i)                                 
+        Hpwm 1, Temp(0), 1953      '1221 = 20MHz min, 2442 = 40MHz min, 1953 = 32MHz
         pause 15
     next i
     return
 
 Light_off:
     for i = Intensity to 0 step -1                         
-        TEMP = (i*i)/(92-i)                                 
-        Hpwm 1, TEMP, 1953      '1221 = 20MHz min, 2442 = 40MHz min, 1953 = 32MHz
+        Temp(0) = (i*i)/(92-i)                                 
+        Hpwm 1, Temp(0), 1953      '1221 = 20MHz min, 2442 = 40MHz min, 1953 = 32MHz
         pause 15
     next i
     CCP1CON = %00000000

@@ -1,0 +1,10 @@
+Offset              VAR word
+EE_Data             var byte
+TEMP                var byte
+Corr                var bit
+Delay               var byte
+
+DataTable           CON EXT
+
+I2CDeviceEEprom     var byte
+I2CAddressEEprom    var word

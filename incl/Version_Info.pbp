@@ -7,7 +7,7 @@ Version_Info_sub:
     I2CAddressEEprom =  1244:gosub Lue_I2C  'v for version
 
     LcdStr(0) = 1   '1st DIGIT 
-    LcdStr(1) = 2   '2st Decimal DIGIT
+    LcdStr(1) = 0   '2st Decimal DIGIT
     LcdStr(2) = 0   '1nd Decimal DIGIT
 
     Lcd_Data=LcdStr(0)
@@ -28,8 +28,8 @@ Version_Info_sub:
 '------------------------------------------------------------------------------- 
 'RTC
 DATA @0,00              'Seconds
-DATA @1,00              'Minutes
-DATA @2,08              'Hours
-DATA @4,01              'Date
-DATA @5,06              'Month
+DATA @1,59              'Minutes
+DATA @2,23              'Hours
+DATA @4,31              'Date
+DATA @5,12              'Month
 DATA @6,15              'Year

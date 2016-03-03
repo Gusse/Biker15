@@ -212,21 +212,21 @@ Emergency_Valikko_sub:
 
 Tests_Valikko:
     pause 500
-    for TEMP = 0 to 1
+    for Temp(0) = 0 to 1
         high Horn
         pause 20  
         low Horn
         pause 1000
-    next TEMP
+    next Temp(0)
     pause 500
-    for TEMP = 0 to 3
+    for Temp(0) = 0 to 3
         high Light_L
         high Light_R
         pause 250
         low Light_L
         low Light_R
         pause 1000
-    next TEMP
+    next Temp(0)
     goto Valikko2_sub3_sub    
 '-------------------------------------------------------------------------------
 

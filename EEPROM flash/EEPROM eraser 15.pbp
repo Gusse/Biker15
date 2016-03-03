@@ -1,0 +1,27 @@
+'-------------------------------------------------------------------------------
+' EEPROM Eraser thru PIC18F4520                                                 
+'-------------------------------------------------------------------------------
+DEFINE Erase 1
+Define Generation 1                             '0 = Biker15, 1 = Biker16
+
+INCLUDE "incl\PIC18F4520_config.pbp"
+    
+'----- Basics ------------------------------------------------------------------
+include "incl\Definitions.pbp"
+include "incl\Variables.pbp"
+
+'----- Config Setups -----------------------------------------------------------
+include "incl\Config_15.pbp"
+'include "incl\Config_16.pbp"
+
+'----- Inits and ADC Definitions -----------------------------------------------
+include "incl\Inits.pbp"
+include "incl\Port_Settings.pbp"
+
+define OSC 32                      
+
+'----- Main program ------------------------------------------------------------ 
+include "incl\Mainloop.pbp"
+
+'----- Lookup datas for EEPROM -------------------------------------------------
+'include "incl\EEPROM_Data.pbp"

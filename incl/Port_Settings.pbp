@@ -1,0 +1,34 @@
+Settings1:
+@  if (Generation == 1)
+    TRISA = %00111111
+@  endif
+@  if (Generation == 0)
+    TRISA = %11111111
+@  endif
+    TRISB = %00000001   
+    TRISC = %00000000
+    TRISD = %01000000
+    TRISE = %00000111
+    return
+
+Settings2:
+    TRISA = %11111111
+    TRISB = %11111111
+    TRISC = %11111111
+    TRISD = %11111111
+    TRISE = %00000111
+    return    
+
+Settings4:
+    TRISC.7 = 1    
+    TRISD.4 = 1    
+    return
+    
+Settings5:
+    TRISC.7 = 0    
+    TRISD.4 = 0
+    return
+
+Settings6:
+    TRISC.3 = 1
+    return

@@ -1,11 +1,8 @@
 Vaihteet        VAR byte        'Vaihde 
 Counter         var byte        '1s period for Temp and Volt readings
 Counter2        var word        '30s refresh näytölle
-Temp            var Byte        'TEMP
-Temp1           VAR byte        'Temperature 1
-Temp2           var byte        'Temperature 2
-Temp1_old       VAR byte        'Temperature 1 edellinen lukema
-Temp2_old       var byte        'Temperature 2 edellinen lukema    
+Temp            var Byte [3]    'Temp & Temperatures
+Temp_old        var byte [2]    'Temperatures
 Temp_CLK        var byte        'Temp variable for CLK
 RTC_Clock       var byte        'Real time clock
 Marker          var byte        'Valikko
@@ -64,3 +61,5 @@ I2CAddress_RTC      var byte    'RTC
 
 'ADCIN
 adval	var byte				' Create adval to store result
+
+x       var byte

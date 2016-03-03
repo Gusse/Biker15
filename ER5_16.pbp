@@ -5,12 +5,12 @@
 '-------------------------------------------------------------------------------  
 DEFINE Debug_Interrupt 0                        '0 = disabled, 1 = Enabled
 DEFINE Logos 1                                  '0 = disabled, 1 = Enabled
-DEFINE BikerLCD 0                               '0 = ZZR, 1 = Test Setup/ER5
-DEFINE BikerSensor 0                            '0 = ZZR, 1 = Test Setup/ER5
+DEFINE BikerLCD 1                               '0 = ZZR, 1 = ER5
+DEFINE BikerSensor 1                            '0 = ZZR, 1 = ER5
 DEFINE Nokia3310_7110 1                         '0 = 3310, 1 = 7110
 DEFINE RTC 1                                    '0 = DS1307, 1 = MCP794XX
 DEFINE RTCTuning 0                              '0 = Normal, 1 = Output ON
-Define Generation 0                             '0 = Biker15, 1 = Biker16
+Define Generation 1                             '0 = Biker15, 1 = Biker16
 
 INCLUDE "incl\PIC18F4520_config.pbp"
 
@@ -23,8 +23,8 @@ include "incl\Definitions.pbp"          'Text file for configurations
 include "incl\Variables.pbp"
 
 '----- Config Setups --------------------------
-include "incl\Config_15.pbp"
-'include "incl\Config_16.pbp"
+'include "incl\Config_15.pbp"
+include "incl\Config_16.pbp"
 
 '----- LCD Selections -------------------------
 include "incl\LCD_5V.pbp"
