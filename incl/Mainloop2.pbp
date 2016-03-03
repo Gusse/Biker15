@@ -97,119 +97,119 @@ Refresh_calc:
     return
 '-------------------------------------------------------------------------------
 Gear1:
-    for TEMP = 0 to 5
+    for Temp(0) = 0 to 5
         PosX=6
 @  if (Nokia3310_7110 == 0)
-        PosY=(TEMP)
+        PosY=(Temp(0))
 @  endif
 @  if (Nokia3310_7110 == 1)
-        PosY=(TEMP+1)
+        PosY=(Temp(0)+1)
 @  endif
         Gosub Lcd_GotoXY
-        if TEMP = 0 or TEMP = 2 or TEMP = 3 or TEMP = 4 then j=536:gosub EEMemory
-        if TEMP = 1 then j=568:gosub EEMemory
-        if TEMP = 5 then j=600:gosub EEMemory
-    next TEMP 
+        if Temp(0) = 0 or Temp(0) = 2 or Temp(0) = 3 or Temp(0) = 4 then j=536:gosub EEMemory
+        if Temp(0) = 1 then j=568:gosub EEMemory
+        if Temp(0) = 5 then j=600:gosub EEMemory
+    next Temp(0) 
     gosub Lcd_Home
     return
 
 Gear2:
-    for TEMP = 0 to 5
+    for Temp(0) = 0 to 5
         PosX=6
 @  if (Nokia3310_7110 == 0)
-        PosY=(TEMP)
+        PosY=(Temp(0))
 @  endif
 @  if (Nokia3310_7110 == 1)
-        PosY=(TEMP+1)
+        PosY=(Temp(0)+1)
 @  endif
         Gosub Lcd_GotoXY
-        if TEMP = 0 or TEMP = 2 or TEMP = 5 then j=504:gosub EEMemory
-        if TEMP = 1 then j=632:gosub EEMemory
-        if TEMP = 3 or TEMP = 4 then j=664:gosub EEMemory
-    next TEMP
+        if Temp(0) = 0 or Temp(0) = 2 or Temp(0) = 5 then j=504:gosub EEMemory
+        if Temp(0) = 1 then j=632:gosub EEMemory
+        if Temp(0) = 3 or Temp(0) = 4 then j=664:gosub EEMemory
+    next Temp(0)
     gosub Lcd_Home
     return
     
 Gear3:
-    for TEMP = 0 to 5
+    for Temp(0) = 0 to 5
         PosX=6
 @  if (Nokia3310_7110 == 0)
-        PosY=(TEMP)
+        PosY=(Temp(0))
 @  endif
 @  if (Nokia3310_7110 == 1)
-        PosY=(TEMP+1)
+        PosY=(Temp(0)+1)
 @  endif
         Gosub Lcd_GotoXY
-        if TEMP = 0 or TEMP = 2 or TEMP = 5 then j=504:gosub EEMemory
-        if TEMP = 1 or TEMP = 3 or TEMP = 4 then j=632:gosub EEMemory
-    next TEMP
+        if Temp(0) = 0 or Temp(0) = 2 or Temp(0) = 5 then j=504:gosub EEMemory
+        if Temp(0) = 1 or Temp(0) = 3 or Temp(0) = 4 then j=632:gosub EEMemory
+    next Temp(0)
     gosub Lcd_Home
     return
     
 Gear4:
-    for TEMP = 0 to 5
+    for Temp(0) = 0 to 5
         PosX=6
 @  if (Nokia3310_7110 == 0)
-        PosY=(TEMP)
+        PosY=(Temp(0))
 @  endif
 @  if (Nokia3310_7110 == 1)
-        PosY=(TEMP+1)
+        PosY=(Temp(0)+1)
 @  endif
         Gosub Lcd_GotoXY
-        if TEMP = 0 or TEMP = 1 then j=696:gosub EEMemory
-        if TEMP = 2 then j=504:gosub EEMemory
-        if TEMP = 3 or TEMP = 4 or TEMP = 5 then j=632:gosub EEMemory
-    next TEMP
+        if Temp(0) = 0 or Temp(0) = 1 then j=696:gosub EEMemory
+        if Temp(0) = 2 then j=504:gosub EEMemory
+        if Temp(0) = 3 or Temp(0) = 4 or Temp(0) = 5 then j=632:gosub EEMemory
+    next Temp(0)
     gosub Lcd_Home
     return
     
 Gear5:
-    for TEMP = 0 to 5
+    for Temp(0) = 0 to 5
         PosX=6
 @  if (Nokia3310_7110 == 0)
-        PosY=(TEMP)
+        PosY=(Temp(0))
 @  endif
 @  if (Nokia3310_7110 == 1)
-        PosY=(TEMP+1)
+        PosY=(Temp(0)+1)
 @  endif
         Gosub Lcd_GotoXY
-        if TEMP = 0 or TEMP = 2 or TEMP = 5 then j=504:gosub EEMemory
-        if TEMP = 1 then j=664:gosub EEMemory
-        if TEMP = 3 or TEMP = 4 then j=632:gosub EEMemory
-    next TEMP
+        if Temp(0) = 0 or Temp(0) = 2 or Temp(0) = 5 then j=504:gosub EEMemory
+        if Temp(0) = 1 then j=664:gosub EEMemory
+        if Temp(0) = 3 or Temp(0) = 4 then j=632:gosub EEMemory
+    next Temp(0)
     gosub Lcd_Home
     return
 
 Gear6:
-    for TEMP = 0 to 5
+    for Temp(0) = 0 to 5
         PosX=6
 @  if (Nokia3310_7110 == 0)
-        PosY=(TEMP)
+        PosY=(Temp(0))
 @  endif
 @  if (Nokia3310_7110 == 1)
-        PosY=(TEMP+1)
+        PosY=(Temp(0)+1)
 @  endif
         Gosub Lcd_GotoXY
-        if TEMP = 0 or TEMP = 2 or TEMP = 5 then j=504:gosub EEMemory
-        if TEMP = 1 then j=664:gosub EEMemory
-        if TEMP = 3 or TEMP = 4 then j=696:gosub EEMemory
-    next TEMP
+        if Temp(0) = 0 or Temp(0) = 2 or Temp(0) = 5 then j=504:gosub EEMemory
+        if Temp(0) = 1 then j=664:gosub EEMemory
+        if Temp(0) = 3 or Temp(0) = 4 then j=696:gosub EEMemory
+    next Temp(0)
     gosub Lcd_Home
     return
     
 Gear0:
-    for TEMP = 0 to 5
+    for Temp(0) = 0 to 5
         PosX=6
 @  if (Nokia3310_7110 == 0)
-        PosY=(TEMP)
+        PosY=(Temp(0))
 @  endif
 @  if (Nokia3310_7110 == 1)
-        PosY=(TEMP+1)
+        PosY=(Temp(0)+1)
 @  endif
         Gosub Lcd_GotoXY
-        if TEMP = 0 or TEMP = 5 then j=504:gosub EEMemory
-        if TEMP = 1 or TEMP = 2 or TEMP = 3 or TEMP = 4 then j=696:gosub EEMemory
-    next TEMP
+        if Temp(0) = 0 or Temp(0) = 5 then j=504:gosub EEMemory
+        if Temp(0) = 1 or Temp(0) = 2 or Temp(0) = 3 or Temp(0) = 4 then j=696:gosub EEMemory
+    next Temp(0)
     gosub Lcd_Home
     return
         

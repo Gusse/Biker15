@@ -1,0 +1,28 @@
+;------------------------ Calculate the CRC from Byte 9 ------------------------
+GetCRC:
+    for x = 0 to 7                  ; Get CRC for each of the 8 bytes
+    DataByte = DQ[x]                ; Assign array pointer using value of x
+    gosub CalcCRC                   ; Get CRC value
+    next x                          ; Repeat until all bytes are done
+    if DQ[8] <> CRCCalc then        ; Do the CRC values match?
+        CRCError = 1                ; Set flag indicating a problem with this sensor
+        else                        
+        CRCError = 0                ; Set flag indicating no problem with this sensor
+    endif                           
+    CRCCalc = 0                     ; Reset CRC calculation variable
+    return
+
+;--------------------- CRC Bit Calcuation Method -------------------------------
+CalcCRC:
+    for i = 0 to 7                      ; Do for all 8 bits in DataByte
+    DataBit = CRCCalc.0 ^ DataByte.0    ; XOR bit0 of DataByte and CRC
+    DataByte = DataByte >> 1            ; Position DataByte for next bit test
+    if DataBit = 0 then Shift           ; If test bit not set, just shift CRCCalc
+    CRCCalc = CRCCalc ^ $18             ; If set, account for EXOR feedback
+
+shift:
+    CRCCalc = CRCCalc >> 1              ; Shift right the CRCCalc byte
+    CRCCalc.7 = DataBit                 ; CRC bit 0 to bit bucket
+    next i                              ; Data bit rotates into CRC bit 7
+    return
+

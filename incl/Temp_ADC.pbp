@@ -5,9 +5,9 @@ Temp_start:
                 gosub Temp_init
                 pause 250
                 gosub Temp_meas
-                Temp = Temp + 1
-                IF temp1 <> 85 and temp2 <> 85 THEN EXIT
-            loop UNTIL Temp > 4
+                Temp(0) = Temp(0) + 1
+                IF Temp(1) <> 85 and Temp(2) <> 85 THEN EXIT
+            loop UNTIL Temp(0) > 4
         else
             OWOUT Comm_Pin, 1, [$55,$4E,0,0,DS18B20_9bit]
             gosub Temp_init
@@ -26,19 +26,19 @@ Temp_meas:
 @  if (BikerSensor == 1)
         OWOUT   Comm_Pin, 1, [$55,$28,$13,$B4,$4B,$01,$00,$00,$93,$BE], No_DS18B20
         OWIN    Comm_Pin, 2, [R_Temp.Lowbyte, R_Temp.Highbyte], No_DS18B20      'Read two bytes
-        temp1 = (R_Temp & $0FF0) >> 4                               'Mask middle 8-bits, shift into lower byte
+        Temp(1) = (R_Temp & $0FF0) >> 4                               'Mask middle 8-bits, shift into lower byte
         OWOUT   Comm_Pin, 1, [$55,$28,$7C,$B3,$4B,$01,$00,$00,$25,$BE], No_DS18B20
         OWIN    Comm_Pin, 2, [R_Temp.Lowbyte, R_Temp.Highbyte], No_DS18B20      'Read two bytes
-        temp2 = (R_Temp & $0FF0) >> 4                               'Mask middle 8-bits, shift into lower byte
+        Temp(2) = (R_Temp & $0FF0) >> 4                               'Mask middle 8-bits, shift into lower byte
         return
 @  endif        
 @  if (BikerSensor == 0)
         OWOUT   Comm_Pin, 1, [$55,$28,$96,$3A,$4F,$01,$00,$00,$F5,$BE], No_DS18B20
         OWIN    Comm_Pin, 2, [R_Temp.Lowbyte, R_Temp.Highbyte], No_DS18B20      'Read two bytes
-        temp1 = (R_Temp & $0FF0) >> 4                               'Mask middle 8-bits, shift into lower byte
+        Temp(1) = (R_Temp & $0FF0) >> 4                               'Mask middle 8-bits, shift into lower byte
         OWOUT   Comm_Pin, 1, [$55,$28,$E9,$89,$5F,$01,$00,$00,$70,$BE], No_DS18B20
         OWIN    Comm_Pin, 2, [R_Temp.Lowbyte, R_Temp.Highbyte], No_DS18B20      'Read two bytes
-        temp2 = (R_Temp & $0FF0) >> 4                               'Mask middle 8-bits, shift into lower byte
+        Temp(2) = (R_Temp & $0FF0) >> 4                               'Mask middle 8-bits, shift into lower byte
         return    
 @  endif
 
@@ -49,9 +49,9 @@ Temperature:
         endif
         if Counter = 19 and DS18B20 = 1 and DS18B20_next = 1 then
             gosub Temp_meas
-            Temp1_old = Temp1
-            Temp2_old = Temp2
-            IF temp1 <> 85 and temp2 <> 85 THEN
+            Temp_old(0) = Temp(1)
+            Temp_old(1) = Temp(2)
+            IF Temp(1) <> 85 and Temp(2) <> 85 THEN
                 DS18B20 = 0
                 DS18B20_next = 0
             endif
@@ -71,44 +71,33 @@ Temperature:
         return
 
 Display_Temperature:
-        If Temp1 > 125 then
-                Temp1 = (255 - Temp1) + 1
-                NEG = 1
-            else
-                NEG = 0
-        endif
-        if (ABS(Temp1 - Temp1_old)) > 10 then
-            Temp1 = Temp1_old
-        endif
-        LcdStr(0) = Temp1 dig 2
-        LcdStr(1) = Temp1 dig 1  
-        LcdStr(2) = Temp1 dig 0
-        PosY=1
-        Temp1_old = Temp1
-        gosub Display_Temperature_Sub
-        
-        If Temp2 > 125 then
-                Temp2 = (255 - Temp2) + 1
-                NEG = 1
-            else
-                NEG = 0
-        endif               
-        if (ABS(Temp2 - Temp2_old)) > 10 then
-            Temp2 = Temp2_old
-        endif
-        LcdStr(0) = Temp2 dig 2
-        LcdStr(1) = Temp2 dig 1  
-        LcdStr(2) = Temp2 dig 0
-        PosY=3
-        Temp2_old = Temp2
-        gosub Display_Temperature_Sub
+        for x = 1 to 2
+            If Temp(x) > 125 then
+                    Temp(x) = (256 - Temp(x))
+                    NEG = 1
+                else
+                    NEG = 0
+            endif
+            if (ABS(Temp(x) - Temp_old(x-1))) > 10 then
+                Temp(x) = Temp_old(x-1)
+            endif
+            LcdStr(0) = Temp(x) dig 2
+            LcdStr(1) = Temp(x) dig 1  
+            LcdStr(2) = Temp(x) dig 0
+            if x = 1 then
+                    PosY = 1
+                elseif x = 2 then
+                        PosY = 3    
+            endif
+            Temp_old(x-1) = Temp(x)
+            gosub Display_Temperature_Sub
+        next x
 
 Display_Temperature_Sub:
         if LcdStr(0) = 0 and LcdStr(1) = 0 then LcdStr(1) = 32
         if LcdStr(0) = 0 then LcdStr(0) = 32
-        IF NEG = 1 then
-            LcdStr(0) = 33
-        endif
+        IF NEG = 1 then LcdStr(0) = 33
+
         IF DS18B20 = 1 then
             LcdStr(0) = 33
             LcdStr(1) = 33
@@ -128,10 +117,10 @@ Display_Temperature_Sub:
 Meas_ADC:
         ADCIN 0, adval
 @  if (BikerSensor == 0)			
-        adval = (adval*125)/200     'Old HW
+        adval = (adval*117)/200     '1M, 1M|1M
 @  endif
 @  if (BikerSensor == 1)
-        adval = (adval*88)/148     'New HW -> 0.595
+        adval = (adval*117)/200     '1M, 1M|1M
 @  endif
         return
         

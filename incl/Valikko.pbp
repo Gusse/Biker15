@@ -33,7 +33,7 @@ Detection:
     I2CAddressEEprom =  932:gosub Lue_I2C   'B                                  
     I2CAddressEEprom =  806:gosub Lue_I2C   '-                                  
     I2CAddressEEprom =  830:gosub Lue_I2C   '1                                  
-    I2CAddressEEprom =  854:gosub Lue_I2C   '5                                  
+    I2CAddressEEprom =  860:gosub Lue_I2C   '6                                  
     I2CAddressEEprom =   728:gosub Lue_I2C  'Space                              
     gosub Version_Info_sub
     I2CAddressEEprom =  782:gosub Lue_I2C   ')

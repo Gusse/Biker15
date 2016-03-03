@@ -24,10 +24,7 @@ Cont_sleep:
     T2CON.2 = 0                     
     PortB = %00000000
     PortC = %00000000
-    TRISB = %11111111
-    TRISC = %11111111
-    TRISD = %11111111
-    TRISE = %00000111
+    gosub Settings2
     Intcon = %00010000
     T2CON.2 = 0                      
 asm
@@ -35,10 +32,7 @@ asm
     nop
 endasm
     Intcon = %00000000
-    TRISB = %00000001   
-    TRISC = %00000000
-    TRISD = %01000000
-    TRISE = %00000111
+    gosub Settings1
     goto Mainloop
 '-------------------------------------------------------------------------------
 Mainloop1_alarmon:    
@@ -49,49 +43,34 @@ Mainloop1_alarmon:
     endif  
 '-------------------------------------------------------------------------------
 LED_blink:
-    TRISC = %11111111
-    TRISD.0 = 1
-    TRISD.1 = 1
-    TRISD.2 = 1
-    TRISD.3 = 1
-    TRISD.4 = 1
-    TRISD.6 = 1
-    TRISD.7 = 1
-LED_blink_sub:
-    If key = 1 then goto Exit_Mainloop
-    nap 1  
-    If key = 1 then goto Exit_Mainloop
+    gosub Settings4
+LED_blink_sub1:
     if Emergency = 0 then
-        NAP 1
-        asm
-           nop
-        endasm
-        NAP 1
-        If key = 1 then goto Exit_Mainloop
-        NAP 1
-        asm
-           nop
-        endasm
-        NAP 1
-        If key = 1 then goto Exit_Mainloop
+        for Temp(0) = 0 to 5
+            If key = 1 then goto Exit_Mainloop
+            IF Int1_3D = 1 THEN goto Alarm_run
+            NAP 1
+        next Temp(0)
         HIGH LED
-        pause 30
+        pause 25
         low LED
         TRISD.3 = 1
-        goto Alarm_run
+        goto LED_blink_sub1
     endif
+    If key = 1 then goto Exit_Mainloop
+    nap 1  
     Gosub Scr_Normal      
     high Light_L
     high Light_R
+    If key = 1 then goto Exit_Mainloop
     NAP 1
     LOW Light_L
     LOW Light_R
     Gosub Scr_Blank
-    goto LED_blink_sub                  
+    goto LED_blink_sub1                  
 '-------------------------------------------------------------------------------
 Exit_Mainloop:
-    TRISC = %00000000
-    TRISD = %01000000
+    gosub Settings1
     goto Mainloop
 '-------------------------------------------------------------------------------
 Alarm_start_1st_time:
@@ -102,21 +81,26 @@ Alarm_start_1st_time:
     Gosub Lcd_Clear
     gosub Start_ok                  
     if Emergency = 0 then
+        gosub Accelerometer_Init
+        gosub Zero_EEPROM
         gosub Accelerometer_Clear
     endif
     goto Exit_Mainloop    
 '-------------------------------------------------------------------------------
 Alarm_run:
-    Gosub Accelerometer
-    if Accel_Alarm = 0 then goto LED_blink_sub                                  
+    gosub Settings5
     gosub Alarming_1st_time_delay_sub                                           
-    Gosub Horn_alarm_end                                                        
-    pause 1000                                                                  
+    pause 1000
+    gosub Alarming_1st_time_delay_sub
+    Accel_Alarm = 0
+    pause 1000
+    gosub Accelerometer_Clear                                                                  
+    pause 1000
     Gosub Accelerometer                                                         
     if Accel_Alarm = 1 then
             goto Alarming
         else
-            goto LED_blink_sub
+            goto LED_blink
     endif
 '-------------------------------------------------------------------------------
 Start_ok:
@@ -137,8 +121,7 @@ Start_ok:
     T2CON.2 = 0                     
     LOW Power_I2C_1Wire             
     T2CON.2 = 0                     
-    TRISC.2 = 1
-    TRISC.3 = 1
+    gosub Settings6
     return
 '-------------------------------------------------------------------------------
 Alarming:
@@ -146,18 +129,18 @@ Alarming:
     if Show_alarm = 1 then goto Alarming2
 '-------------------------------------------------------------------------------
 Alarming_1st_time_delay:
-    for TEMP = 0 to 5                                                   
+    for Temp(0) = 0 to 5                                                   
         If key = 1 then goto Exit_Mainloop                                      
         gosub Alarming_1st_time_delay_sub                                       
         pause 2250
-    next TEMP
+    next Temp(0)
     Gosub Horn_alarm_end                                                        
     Show_alarm = 1
-    for TEMP = 0 to 3 step 1
+    for Temp(0) = 0 to 3 step 1
         If key = 1 then goto Exit_Mainloop
         gosub Horn_alarm
-    next TEMP
-    goto LED_blink_sub                                                          
+    next Temp(0)
+    goto LED_blink                                                          
 '-------------------------------------------------------------------------------
 Alarming_1st_time_delay_sub:                                                    
     high Horn
@@ -174,10 +157,10 @@ Alarming_1st_time_delay_sub:
 '-------------------------------------------------------------------------------
 Alarming2:
     Alarm_2nd = 1
-    for TEMP = 0 to 9 step 1
+    for Temp(0) = 0 to 9 step 1
         If key = 1 then goto Exit_Mainloop
         gosub Horn_alarm
-    next TEMP
+    next Temp(0)
     Gosub Horn_alarm_end                     
     goto Blink_lights
 '-------------------------------------------------------------------------------
@@ -208,7 +191,7 @@ Horn_alarm_end:
     
 Blink_lights:
     for i = 0 to 3 step 1
-        for TEMP = 0 to 3 step 1
+        for Temp(0) = 0 to 3 step 1
             If key = 1 then goto Exit_Mainloop
             high Light_R:High Light_L
             pause 500
@@ -216,7 +199,7 @@ Blink_lights:
             pause 500
             Gosub Accelerometer
             if Accel_Alarm = 1 then goto Alarming
-        next TEMP
+        next Temp(0)
         If key = 1 then goto Exit_Mainloop
         high Light_R:High Light_L
         pause 500
@@ -232,7 +215,7 @@ Blink_lights:
     next i
 
     for i = 0 to 2 step 1    
-        for TEMP = 0 to 4 step 1
+        for Temp(0) = 0 to 4 step 1
             If key = 1 then goto Exit_Mainloop
             high Light_R:High Light_L
             pause 500
@@ -240,7 +223,7 @@ Blink_lights:
             pause 1500
             Gosub Accelerometer
             if Accel_Alarm = 1 then goto Alarming
-        next TEMP
+        next Temp(0)
         If key = 1 then goto Exit_Mainloop
         high Light_R:High Light_L
         pause 500
@@ -254,6 +237,6 @@ Blink_lights:
         Gosub Accelerometer
         if Accel_Alarm = 1 then goto Alarming
     next i            
-    goto LED_blink_sub                                                          
+    goto LED_blink                                                         
 '-------------------------------------------------------------------------------
 '###############################################################################

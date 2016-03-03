@@ -1,0 +1,48 @@
+'------------------------------------------------------------------------------- 
+' Main program starts here
+'-------------------------------------------------------------------------------      
+Mainloop:
+    high Light_R
+@  if (Erase == 0)
+for Offset = 0 to 8191
+    ReadCODE(DataTable + Offset), EE_Data
+    I2CAddressEEprom = Offset
+    gosub Flashing
+next
+@  endif
+
+@  if (Erase == 1)
+    EE_Data = $FF
+    For Offset = 0 to 8191
+        I2CAddressEEprom = Offset
+        gosub Flashing
+    next    
+@  endif        
+
+    LOW Light_R
+    end
+    
+Flashing:
+    If Delay > 0 then
+        Delay = Delay - 1
+    endif
+    Corr = 0
+    do While Corr = 0
+        gosub I2C_Write
+        gosub I2C_Read
+        if TEMP = EE_Data then Corr = 1
+        High LED
+        Delay = Delay + 1
+    loop
+    Low LED  
+    return
+            
+I2C_Write:
+    I2CWRITE SDA, SCL, I2CDeviceEEprom, I2CAddressEEprom,[ EE_Data ]
+    pause Delay
+    Return
+
+I2C_Read:
+    I2cread SDA, SCL, I2CDeviceEEprom, I2CAddressEEprom,[ TEMP ]
+    Return
+'-------------------------------------------------------------------------------

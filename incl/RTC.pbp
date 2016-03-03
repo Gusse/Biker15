@@ -1,38 +1,78 @@
+RTC_Init_Boot:
+    HIGH Power_I2C       'Power control for I2C communication (Accelerometer also)
+    pause 200
+    
+'--------------------------------------------
+@  if (RTC == 0)			    
+    I2CAddress_RTC = 7                 
+@  if (BikerSensor == 0)			
+    Temp(0) = %10000001        '+4ppm
+@  endif
+@  if (BikerSensor == 1)
+    Temp(0) = %10100010        '-4ppm
+@  endif        
+    gosub I2C_Write_RTC
+@  endif
+
+@  if (RTC == 1)
+@  if (RTCTuning == 1)			    
+    I2CAddress_RTC = 7 : Temp(0) = %01000011 : gosub I2C_Write_RTC
+@  endif        
+    I2CAddress_RTC = 8 : Temp(0) = %00011110 : gosub I2C_Write_RTC 'Trim = -30 tick/min    
+@  endif
+'--------------------------------------------
+    
+    for Marker = 0 to 6
+        if Marker = 3 then Marker = 4
+        read Marker, RTC_Clock
+        gosub RTC_Parser
+        pause 5
+    next Marker
+    low Power_I2C
+    pauseus 100
+    return
+
+RTC_Parser:
+    I2CAddress_RTC = Marker        
+        if Marker = 0 then 
+                Temp(0) = (((RTC_Clock/10) & 00000111) << 4) + (RTC_Clock - ((RTC_Clock/10)*10))
+@  if (RTC == 1)
+                Temp(0) = Temp(0) + 128
+@  endif
+            elseif Marker = 1 then
+                    Temp(0) = (((RTC_Clock/10) & 00000111) << 4) + (RTC_Clock - ((RTC_Clock/10)*10))
+                elseif Marker = 2 or Marker = 4 or Marker = 6 then 
+                        Temp(0) = (((RTC_Clock/10) & 00000011) << 4) + (RTC_Clock - ((RTC_Clock/10)*10))
+                    elseif Marker = 5 then
+                        Temp(0) = (((RTC_Clock/10) & 00000001) << 4) + (RTC_Clock - ((RTC_Clock/10)*10))                
+        endif                                           
+    gosub I2C_Write_RTC
+    return
+'--------------------------------------------
+
 RTC_Init:
     HIGH Power_I2C       'Power control for I2C communication (Accelerometer also)
     Gosub Lcd_Clear
     pause 200
     
-    I2CAddress_RTC = 7                 
-@  if (BikerSensor == 0)			
-    Temp = %10000001        '+4ppm
-@  endif
-@  if (BikerSensor == 1)
-'    Temp = %10000001        '+4ppm
-    Temp = %10100010        '-4ppm
-@  endif    
-    
-    gosub I2C_Write_RTC
-
 RTC_Init_Loop:
-'--------------------------------------------
     PosX=18:PosY=1:Gosub Lcd_GotoXY    
-    for TEMP = 2 to 0 step -1
-        read TEMP, RTC_Clock   
+    for Temp(0) = 2 to 0 step -1
+        read Temp(0), RTC_Clock   
         gosub Show_RTC_Clock
-        if TEMP > 0 then
+        if Temp(0) > 0 then
             I2CAddressEEprom = 884:gosub Lue_I2C
         endif
-    next TEMP
+    next Temp(0)
 
     PosX=18:PosY=2:Gosub Lcd_GotoXY
-    for TEMP = 4 to 6 step 1
-        read TEMP, RTC_Clock
+    for Temp(0) = 4 to 6 step 1
+        read Temp(0), RTC_Clock
         gosub Show_RTC_Clock
-        if TEMP < 6 then
+        if Temp(0) < 6 then
             I2CAddressEEprom = 812:gosub Lue_I2C
         endif
-    next TEMP    
+    next Temp(0)    
 
 '--------------------------------------------
     for Marker = 0 to 6
@@ -53,9 +93,7 @@ RTC_Init_Loop1:
         if Marker = 6 then PosX=54:PosY=2:Gosub Lcd_GotoXY
         gosub Show_RTC_Clock
         gosub Set_RTC_Clock_Increase
-        I2CAddress_RTC = Marker
-        Temp = (((RTC_Clock/10) & 00000111) << 4) + (RTC_Clock - ((RTC_Clock/10)*10))
-        gosub I2C_Write_RTC
+        gosub RTC_Parser
     next Marker
     PosX=18:PosY=0:Gosub Lcd_GotoXY
     I2CAddressEEprom = 728:gosub Lue_I2C
@@ -140,26 +178,34 @@ RTC_Clock_Menu_Sub_Loop:
         endif
     endif         
     PosX=18:PosY=1:Gosub Lcd_GotoXY        
-    for Temp2 = 2 to 0 step -1
-        I2CAddress_RTC = Temp2        
+    for Temp(2) = 2 to 0 step -1
+        I2CAddress_RTC = Temp(2)        
         gosub I2C_Read_RTC
-        RTC_Clock = (Temp & %00001111) + ((Temp & %01110000) >> 4)*10
+        if Temp(2) = 2 then
+                RTC_Clock = (Temp(0) & %00001111) + ((Temp(0) & %00110000) >> 4)*10
+            else    
+                RTC_Clock = (Temp(0) & %00001111) + ((Temp(0) & %01110000) >> 4)*10
+        endif
         gosub Show_RTC_Clock
-        if Temp2 > 0 then
+        if Temp(2) > 0 then
             I2CAddressEEprom = 884:gosub Lue_I2C
         endif
-    next Temp2
+    next Temp(2)
 
     PosX=18:PosY=2:Gosub Lcd_GotoXY
-    for Temp2 = 4 to 6 step 1
-        I2CAddress_RTC = Temp2        
+    for Temp(2) = 4 to 6 step 1
+        I2CAddress_RTC = Temp(2)        
         gosub I2C_Read_RTC
-        RTC_Clock = (Temp & %00001111) + ((Temp & %01110000) >> 4)*10
+        if Temp(2) = 5 then
+                RTC_Clock = (Temp(0) & %00001111) + ((Temp(0) & %00010000) >> 4)*10
+            else
+                RTC_Clock = (Temp(0) & %00001111) + ((Temp(0) & %00110000) >> 4)*10
+        endif
         gosub Show_RTC_Clock
-        if Temp2 < 6 then
+        if Temp(2) < 6 then
             I2CAddressEEprom = 812:gosub Lue_I2C
         endif
-    next Temp2    
+    next Temp(2)    
       
     if Menu = 0 then
         pause 100
@@ -185,11 +231,11 @@ Show_RTC_Clock:
 
 '-------------------------------------------------------------------------------
 I2C_Write_RTC:
-    I2CWRITE SDA_3D, SCL_3D, I2CDevice_RTC_write, I2CAddress_RTC,[ TEMP ]
+    I2CWRITE SDA_3D, SCL_3D, I2CDevice_RTC_write, I2CAddress_RTC,[ Temp(0) ]
     Return
 
 I2C_Read_RTC:
-    I2cread SDA_3D, SCL_3D, I2CDevice_RTC_read, I2CAddress_RTC,[ TEMP ]
+    I2cread SDA_3D, SCL_3D, I2CDevice_RTC_read, I2CAddress_RTC,[ Temp(0) ]
     Return
 '-------------------------------------------------------------------------------
 
@@ -198,7 +244,7 @@ RTC_Clock_Disp:
     for Temp_CLK = 2 to 1 step -1
         I2CAddress_RTC = Temp_CLK        
         gosub I2C_Read_RTC
-        RTC_Clock = (Temp & %00001111) + ((Temp & %01110000) >> 4)*10
+        RTC_Clock = (Temp(0) & %00001111) + ((Temp(0) & %01110000) >> 4)*10
         gosub Show_RTC_Clock
         if Temp_CLK > 1 then
             high Lcd_DC

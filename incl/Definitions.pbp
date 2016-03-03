@@ -11,14 +11,14 @@
 '			            <>| E2      |-- GND
 '			        VDD --|      D7 |<> 
 '			        GND --|      D6 |<- Int1_3D              
-'			            <>| A6   D5 |-> Power_I2C             
-'			            <>| A7   D4 |-> I2C SCL_3D          
+'			    I2C SDA <>| A6   D5 |-> Power_I2C             
+'			    I2C SCL <-| A7   D4 |-> I2C SCL_3D          
 '		 Light_R [rele] <-| C0   C7 |<> I2C SDA_3D     
 '		 Light_L [rele] <-| C1   C6 |-> Oiler [rele]         
 '	     LCD LED (HPWM) <-| C2   C5 |-> Horn [rele]
 '	    Power_I2C_1Wire <-| C3   C4 |<> 
-'			    I2C SCL <-| D0   D3 |-> LED alarm
-'               I2C SDA <>| D1   D2 |<> 1Wire
+'			            <>| D0   D3 |-> LED alarm
+'                       <>| D1   D2 |<> 1Wire
 '                         |_________|
 '
 '                       pin nr  Name	
